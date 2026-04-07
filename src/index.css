@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { direction: rtl; }
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  margin: 0;
+}
+
+#root { min-height: 100vh; }
+
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+
+/* ── Violet CTA shadow (used only on primary buttons) ─── */
+.shadow-violet {
+  box-shadow: 0 4px 24px -4px rgba(124, 58, 237, 0.35);
+}
+.shadow-violet-lg {
+  box-shadow: 0 8px 32px -6px rgba(124, 58, 237, 0.45);
+}
