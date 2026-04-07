@@ -88,14 +88,14 @@ export default function Hero({ onShopNow }) {
   const next = () => setIndex((i) => (i + 1) % featured.length)
 
   return (
-    <section className="relative bg-white min-h-[85vh] flex items-center overflow-hidden">
+    <section className="relative bg-white min-h-[85vh] flex items-center overflow-visible">
       {/* subtle bg blob */}
       <div
         className="absolute -top-40 left-0 w-[500px] h-[500px] rounded-full opacity-[0.05] pointer-events-none"
         style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-10 lg:py-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-6 pb-10 lg:py-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
 
           {/* ── RIGHT COLUMN: Text (RTL = appears right) ───────── */}
@@ -190,7 +190,7 @@ export default function Hero({ onShopNow }) {
               className="relative mx-4 lg:mx-0"
             >
               {/* Main image — cross-fade */}
-              <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100 aspect-[3/2] lg:aspect-[4/3] bg-slate-100 relative">
+              <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100 aspect-[4/3] lg:aspect-[4/3] bg-slate-100 relative">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={current.image}

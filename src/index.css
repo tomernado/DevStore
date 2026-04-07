@@ -23,6 +23,10 @@ body {
 
 #root { min-height: 100vh; }
 
+/* ── Hide scrollbar utility ────────────────────────────── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ── Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }

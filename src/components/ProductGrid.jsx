@@ -37,11 +37,11 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           </div>
         </motion.div>
 
-        {/* Category filter pills */}
-        <div className="flex flex-wrap gap-2 mb-10">
+        {/* Category filter pills — horizontally scrollable on mobile */}
+        <div className="flex gap-2 mb-10 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
           <button
             onClick={() => onCategoryChange(null)}
-            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
+            className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
               !activeCategory
                 ? 'bg-violet-600 border-violet-600 text-white shadow-violet'
                 : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-800 bg-white'
@@ -53,13 +53,13 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
             <button
               key={cat.id}
               onClick={() => onCategoryChange(cat.id)}
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
+              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
                 activeCategory === cat.id
                   ? 'bg-violet-600 border-violet-600 text-white shadow-violet'
                   : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-800 bg-white'
               }`}
             >
-              {cat.icon} {cat.label}
+              {cat.label}
             </button>
           ))}
         </div>
