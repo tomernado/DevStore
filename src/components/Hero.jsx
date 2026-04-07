@@ -95,7 +95,7 @@ export default function Hero({ onShopNow }) {
         style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-6 pb-10 lg:py-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24 pb-10 lg:pt-0 lg:py-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
 
           {/* ── RIGHT COLUMN: Text (RTL = appears right) ───────── */}
