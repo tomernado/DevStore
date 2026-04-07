@@ -66,20 +66,22 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-0.5">
+          <nav className="hidden md:flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-2xl px-2 py-1.5">
             <Link
               to="/"
-              className="px-3.5 py-2 text-sm text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all duration-150 font-medium"
+              className="px-4 py-1.5 text-sm text-slate-500 hover:text-slate-900 hover:bg-white hover:shadow-sm rounded-xl transition-all duration-150 font-semibold"
             >
               הכל
             </Link>
-            {categories.map((cat) => (
+            <div className="w-px h-4 bg-slate-200" />
+            {categories.map((cat, i) => (
               <button
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
-                className="px-3.5 py-2 text-sm text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all duration-150 font-medium"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm text-slate-500 hover:text-slate-900 hover:bg-white hover:shadow-sm rounded-xl transition-all duration-150 font-semibold group"
               >
-                {cat.label}
+                <span className="text-base leading-none">{cat.icon}</span>
+                <span>{cat.label}</span>
               </button>
             ))}
           </nav>
