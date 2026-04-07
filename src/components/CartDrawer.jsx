@@ -1,33 +1,39 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ShoppingBag, Plus, Minus, Trash2, CreditCard, ArrowLeft, Loader2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import emailjs from '@emailjs/browser'
+import { supabase } from '../lib/supabase'
 import { useStore } from '../store/useStore'
 
-async function handleCheckout({ cart, total, clearCart, closeCart, navigate, setProcessing }) {
+async function handleCheckout({ cart, clearCart, closeCart, setProcessing }) {
   setProcessing(true)
 
-  await new Promise((r) => setTimeout(r, 2000))
-
   try {
-    await emailjs.send(
-      'SERVICE_ID',
-      'TEMPLATE_ID',
-      {
-        to_email: 'tomernado1233@gmail.com',
-        total: `₪${total.toLocaleString()}`,
-        items: cart.map((i) => `${i.nameHe} ×${i.quantity}`).join(', '),
-      },
-      'PUBLIC_KEY'
-    )
-  } catch {
-    // EmailJS not configured yet — continue to success page anyway
-  }
+    const base = import.meta.env.BASE_URL
+    const origin = window.location.origin
 
-  clearCart()
-  closeCart()
-  navigate('/success')
+    const { data, error } = await supabase.functions.invoke('create-checkout', {
+      body: {
+        cart: cart.map((i) => ({
+          nameHe: i.nameHe,
+          image: i.image,
+          price: i.price,
+          quantity: i.quantity,
+        })),
+        successUrl: `${origin}${base}success`,
+        cancelUrl: `${origin}${base}`,
+      },
+    })
+
+    if (error || !data?.url) throw new Error(error?.message ?? 'No checkout URL')
+
+    clearCart()
+    closeCart()
+    window.location.href = data.url
+  } catch (err) {
+    console.error('Checkout error:', err)
+    setProcessing(false)
+    alert('שגיאה ביצירת דף התשלום. נסה שוב.')
+  }
 }
 
 export default function CartDrawer() {
@@ -37,7 +43,6 @@ export default function CartDrawer() {
     getCartTotal, getCartCount,
   } = useStore()
 
-  const navigate = useNavigate()
   const [isProcessing, setProcessing] = useState(false)
 
   const total = getCartTotal()
@@ -185,7 +190,7 @@ export default function CartDrawer() {
 
                 <motion.button
                   onClick={() =>
-                    handleCheckout({ cart, total, clearCart, closeCart, navigate, setProcessing })
+                    handleCheckout({ cart, clearCart, closeCart, setProcessing })
                   }
                   disabled={isProcessing}
                   whileHover={isProcessing ? {} : { scale: 1.02 }}

@@ -1,15 +1,17 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingCart, Heart, Zap, Menu, X } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { categories } from '../data/products'
-import { signInWithGoogle } from '../lib/supabase'
+import { signInWithGoogle, signOut } from '../lib/supabase'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState(null)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const userMenuRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -33,6 +35,23 @@ export default function Navbar() {
     try { await signInWithGoogle() }
     catch { openAuthModal() }
   }
+
+  const handleLogout = async () => {
+    try { await signOut() }
+    catch (e) { console.error(e) }
+    setUserMenuOpen(false)
+  }
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handler = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
 
   const handleCategoryClick = (catId) => {
     setActiveCategory(catId)
@@ -107,7 +126,6 @@ export default function Navbar() {
                 key={cat.id}
                 active={activeCategory === cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
-                icon={cat.icon}
               >
                 {cat.label}
               </NavPill>
@@ -138,13 +156,45 @@ export default function Navbar() {
 
             {/* Login / User */}
             {user ? (
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 mr-1">
-                <div className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-xs text-white font-bold">
-                  {user.email?.[0]?.toUpperCase() ?? 'U'}
-                </div>
-                <span className="text-sm text-slate-700 max-w-[110px] truncate font-medium">
-                  {user.email}
-                </span>
+              <div className="hidden md:block relative mr-1" ref={userMenuRef}>
+                <motion.button
+                  onClick={() => setUserMenuOpen((o) => !o)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-violet-300 hover:bg-violet-50 transition-all"
+                >
+                  <div className="w-6 h-6 rounded-full bg-violet-600 flex items-center justify-center text-xs text-white font-bold flex-shrink-0">
+                    {user.email?.[0]?.toUpperCase() ?? 'U'}
+                  </div>
+                  <span className="text-sm text-slate-700 max-w-[110px] truncate font-medium">
+                    {user.email}
+                  </span>
+                  <svg className={`w-3.5 h-3.5 text-slate-400 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </motion.button>
+
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute left-0 top-full mt-2 w-44 bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden z-50"
+                    >
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-500 hover:bg-red-50 font-semibold transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />
+                        </svg>
+                        התנתקות
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
               <motion.button
@@ -198,17 +248,33 @@ export default function Navbar() {
                     onClick={() => handleCategoryClick(cat.id)}
                     className="flex items-center gap-3 px-4 py-3 text-slate-700 hover:text-violet-600 hover:bg-violet-50 rounded-xl transition-all font-semibold text-base text-right w-full"
                   >
-                    <span className="text-lg">{cat.icon}</span>
                     <span>{cat.label}</span>
                   </button>
                 ))}
                 <div className="mt-3 pt-3 border-t border-slate-100">
-                  <button
-                    onClick={handleLogin}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-900 hover:bg-violet-600 text-white text-sm font-bold tracking-tight transition-colors"
-                  >
-                    התחברות עם Google
-                  </button>
+                  {user ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 px-4 py-2">
+                        <div className="w-7 h-7 rounded-full bg-violet-600 flex items-center justify-center text-xs text-white font-bold flex-shrink-0">
+                          {user.email?.[0]?.toUpperCase() ?? 'U'}
+                        </div>
+                        <span className="text-sm text-slate-600 truncate">{user.email}</span>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full px-4 py-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 text-sm font-bold tracking-tight transition-colors"
+                      >
+                        התנתקות
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleLogin}
+                      className="w-full px-4 py-3 rounded-xl bg-slate-900 hover:bg-violet-600 text-white text-sm font-bold tracking-tight transition-colors"
+                    >
+                      התחברות עם Google
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -221,19 +287,18 @@ export default function Navbar() {
 
 /* ── Sub-components ──────────────────────────────────────────────── */
 
-function NavPill({ children, active, onClick, icon }) {
+function NavPill({ children, active, onClick }) {
   return (
     <motion.button
       onClick={onClick}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.96 }}
-      className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl text-[15px] font-semibold transition-all duration-150 ${
+      className={`relative flex items-center px-4 py-2 rounded-xl text-[15px] font-bold tracking-tight transition-all duration-150 ${
         active
           ? 'text-violet-700 bg-violet-50'
-          : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+          : 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
       }`}
     >
-      {icon && <span className="text-base leading-none">{icon}</span>}
       {children}
       {active && (
         <motion.div
