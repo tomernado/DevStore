@@ -56,8 +56,8 @@ export default function ProductCard({ product, index }) {
               whileTap={{ scale: 0.9 }}
               className={`absolute top-3 left-3 w-9 h-9 flex items-center justify-center rounded-xl shadow-sm transition-all duration-200 ${
                 fav
-                  ? 'bg-violet-600 text-white opacity-100'
-                  : 'bg-white text-slate-400 hover:text-violet-500 opacity-0 group-hover:opacity-100'
+                  ? 'bg-violet-600 text-white'
+                  : 'bg-white text-slate-400 hover:text-violet-500 sm:opacity-0 sm:group-hover:opacity-100'
               }`}
               aria-label="מועדפים"
             >
