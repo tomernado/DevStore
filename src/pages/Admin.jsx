@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Pencil, Plus, X, Package, CheckCircle2, AlertCircle } from 'lucide-react'
+import { Pencil, Plus, X, Package, CheckCircle2, AlertCircle, Search } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { categories } from '../data/products'
 
@@ -184,7 +184,8 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
 
 export default function Admin() {
   const [products, setProducts] = useState([])
-  const [modal, setModal] = useState(null) // null | { mode: 'add' | 'edit', data: object }
+  const [modal, setModal] = useState(null)
+  const [search, setSearch] = useState('')
 
   const load = () =>
     supabase.from('products').select('*').order('created_at', { ascending: false })
@@ -211,6 +212,17 @@ export default function Admin() {
 
   const closeModal = () => setModal(null)
 
+  const filtered = products.filter(p => {
+    const q = search.trim().toLowerCase()
+    if (!q) return true
+    return (
+      p.name?.toLowerCase().includes(q) ||
+      p.name_he?.toLowerCase().includes(q) ||
+      p.category?.toLowerCase().includes(q) ||
+      p.badge?.toLowerCase().includes(q)
+    )
+  })
+
   return (
     <div className="min-h-screen bg-slate-50 pt-28 pb-16 px-4">
       <div className="max-w-2xl mx-auto space-y-6">
@@ -231,6 +243,23 @@ export default function Admin() {
           </motion.button>
         </div>
 
+        {/* Search */}
+        <div className="relative">
+          <Search size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="חפש לפי שם, קטגוריה או תווית..."
+            className="w-full pr-11 pl-10 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+              <X size={14} />
+            </button>
+          )}
+        </div>
+
         {/* Product list */}
         <div className="space-y-2.5">
           {products.length === 0 && (
@@ -242,8 +271,13 @@ export default function Admin() {
               </button>
             </div>
           )}
+          {products.length > 0 && filtered.length === 0 && (
+            <div className="text-center py-10 bg-white rounded-2xl border border-slate-100">
+              <p className="text-slate-400 text-sm font-semibold">לא נמצאו מוצרים עבור "{search}"</p>
+            </div>
+          )}
 
-          {products.map(p => (
+          {filtered.map(p => (
             <motion.div key={p.id} layout
               className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-4 group"
             >

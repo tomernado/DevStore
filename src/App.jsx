@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
+import { BrowserRouter, Routes, Route, useLocation, Link } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Settings } from 'lucide-react'
 import './index.css'
 import Navbar from './components/Navbar'
 import CartDrawer from './components/CartDrawer'
@@ -31,6 +32,36 @@ function AnimatedRoutes() {
   )
 }
 
+function AdminFab() {
+  const { user } = useStore()
+  const location = useLocation()
+  const show = user && location.pathname === '/'
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.25 }}
+          className="fixed bottom-6 left-6 z-40"
+        >
+          <Link to="/admin">
+            <motion.button
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-white text-sm font-bold shadow-lg transition-colors backdrop-blur-sm border border-slate-700"
+            >
+              <Settings size={15} />
+              ערוך חנות
+            </motion.button>
+          </Link>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+
 function AppShell() {
   const { setUser, clearUser } = useStore()
 
@@ -51,6 +82,7 @@ function AppShell() {
       <AnimatedRoutes />
       <CartDrawer />
       <AuthModal />
+      <AdminFab />
 
       <footer className="bg-slate-50 border-t border-slate-100 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,39 +1,34 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Search, X } from 'lucide-react'
-import { products as staticProducts, categories } from '../data/products'
+import { categories } from '../data/products'
 import { supabase } from '../lib/supabase'
 import { useStore } from '../store/useStore'
 import ProductCard from './ProductCard'
 
 export default function ProductGrid({ activeCategory, onCategoryChange }) {
-  const { searchQuery: navQuery, setSearchQuery: setNavQuery, clearSearch } = useStore()
+  const { searchQuery: navQuery, clearSearch } = useStore()
   const [localQuery, setLocalQuery] = useState('')
-  const [dbProducts, setDbProducts] = useState([])
+  const [allProducts, setAllProducts] = useState([])
 
   // Use navbar query if active, otherwise local
   const query = navQuery || localQuery
-  const setQuery = (v) => {
-    setLocalQuery(v)
-    if (navQuery) clearSearch()
-  }
 
   useEffect(() => {
-    supabase.from('products').select('*').eq('in_stock', true).then(({ data }) => {
-      if (data?.length) setDbProducts(data.map(p => ({
-        id: `db-${p.id}`,
-        name: p.name,
-        nameHe: p.name_he || p.name,
-        price: p.price,
-        category: p.category,
-        image: p.image,
-        description: p.description,
-        badge: p.badge,
-      })))
-    })
+    supabase.from('products').select('*').eq('in_stock', true).order('created_at', { ascending: true })
+      .then(({ data }) => {
+        setAllProducts((data ?? []).map(p => ({
+          id: p.id,
+          name: p.name,
+          nameHe: p.name_he || p.name,
+          price: p.price,
+          category: p.category,
+          image: p.image,
+          description: p.description,
+          badge: p.badge,
+        })))
+      })
   }, [])
-
-  const allProducts = [...staticProducts, ...dbProducts]
 
   const filtered = allProducts.filter((p) => {
     const matchCat = !activeCategory || p.category === activeCategory
@@ -116,9 +111,7 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
             <button
               onClick={() => { setLocalQuery(''); clearSearch() }}
               className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
-            >
-              <X size={15} />
-            </button>
+            ><X size={15} /></button>
           )}
         </div>
 
