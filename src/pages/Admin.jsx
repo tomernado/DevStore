@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Pencil, Plus, X, Package, CheckCircle2, AlertCircle,
   Search, TrendingUp, ShoppingBag, Award, ChevronDown,
+  Upload, Link as LinkIcon,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { categories } from '../data/products'
@@ -61,7 +62,23 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
   const [form, setForm] = useState(initial)
   const [status, setStatus] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [imageMode, setImageMode] = useState('url') // 'url' | 'upload'
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef(null)
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const ext = file.name.split('.').pop()
+    const path = `products/${Date.now()}.${ext}`
+    const { error } = await supabase.storage.from('product-images').upload(path, file, { upsert: true })
+    if (error) { console.error(error); setUploading(false); return }
+    const { data } = supabase.storage.from('product-images').getPublicUrl(path)
+    set('image', data.publicUrl)
+    setUploading(false)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -134,11 +151,48 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
               </select>
             </Field>
           </div>
-          <Field label="כתובת תמונה (URL)" required>
-            <input value={form.image} onChange={e => set('image', e.target.value)} placeholder="https://images.unsplash.com/..." required className={inputCls} />
+          <Field label="תמונה" required>
+            {/* Toggle */}
+            <div className="flex rounded-xl border border-slate-200 overflow-hidden mb-2 bg-slate-50">
+              <button type="button" onClick={() => setImageMode('url')}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold transition-all ${imageMode === 'url' ? 'bg-violet-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}>
+                <LinkIcon size={13} /> קישור URL
+              </button>
+              <button type="button" onClick={() => setImageMode('upload')}
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold transition-all ${imageMode === 'upload' ? 'bg-violet-600 text-white' : 'text-slate-500 hover:text-slate-700'}`}>
+                <Upload size={13} /> העלאת קובץ
+              </button>
+            </div>
+
+            {imageMode === 'url' ? (
+              <input value={form.image} onChange={e => set('image', e.target.value)} placeholder="https://images.unsplash.com/..." required={!form.image} className={inputCls} />
+            ) : (
+              <div
+                onClick={() => fileRef.current?.click()}
+                className="w-full border-2 border-dashed border-slate-200 rounded-xl py-6 flex flex-col items-center gap-2 cursor-pointer hover:border-violet-400 hover:bg-violet-50/40 transition-all"
+              >
+                <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
+                {uploading ? (
+                  <div className="w-5 h-5 rounded-full border-2 border-violet-600 border-t-transparent animate-spin" />
+                ) : (
+                  <>
+                    <Upload size={20} className="text-slate-400" />
+                    <span className="text-slate-500 text-xs font-medium">לחץ לבחירת קובץ</span>
+                    <span className="text-slate-300 text-xs">PNG, JPG, WEBP</span>
+                  </>
+                )}
+              </div>
+            )}
           </Field>
+
           {form.image && (
-            <img src={form.image} alt="preview" className="w-full h-36 object-cover rounded-2xl border border-slate-100" onError={e => e.target.style.display = 'none'} />
+            <div className="relative">
+              <img src={form.image} alt="preview" className="w-full h-36 object-cover rounded-2xl border border-slate-100" onError={e => e.target.style.display = 'none'} />
+              <button type="button" onClick={() => set('image', '')}
+                className="absolute top-2 left-2 w-6 h-6 bg-white rounded-full shadow flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors">
+                <X size={12} />
+              </button>
+            </div>
           )}
           <Field label="תיאור">
             <textarea value={form.description} onChange={e => set('description', e.target.value)} rows={2} placeholder="תיאור המוצר בעברית..." className={`${inputCls} resize-none`} />
