@@ -145,7 +145,7 @@ export default function Hero({ onShopNow }) {
               </span>
               <Sparkles size={12} />
               <span style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
-                הקולקציה החדשה — 2025
+                DevStore × פרימיום
               </span>
             </motion.div>
 
@@ -153,7 +153,7 @@ export default function Hero({ onShopNow }) {
             <motion.div variants={staggerV(1)} initial="hidden" animate="visible" className="mb-6">
               <h1
                 className="font-extrabold leading-[1.07] tracking-tight text-slate-900"
-                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.6rem, 5.5vw, 4.3rem)' }}
+                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 7vw, 4.3rem)' }}
               >
                 ציוד פרימיום{' '}
                 <br className="hidden sm:block" />
@@ -191,23 +191,23 @@ export default function Hero({ onShopNow }) {
               נבדק לעומק, ומגיע עם אחריות מלאה.
             </motion.p>
 
-            {/* Trust chips */}
+            {/* Trust chips — fixed 3-column row on all screen sizes */}
             <motion.div
               variants={staggerV(3)} initial="hidden" animate="visible"
-              className="flex flex-wrap gap-2 mb-10"
+              className="grid grid-cols-3 gap-2 mb-10"
             >
               {[
                 { icon: Shield, label: 'אחריות יבואן' },
-                { icon: Truck, label: 'משלוח 24 שעות' },
+                { icon: Truck, label: 'משלוח 24h' },
                 { icon: Zap, label: 'בחירת מומחים' },
               ].map(({ icon: Icon, label }) => (
                 <div
                   key={label}
-                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 bg-white border border-slate-100"
+                  className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-100 text-center"
                   style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
                 >
-                  <Icon size={13} className="text-violet-500 flex-shrink-0" />
-                  {label}
+                  <Icon size={12} className="text-violet-500 flex-shrink-0" />
+                  <span>{label}</span>
                 </div>
               ))}
             </motion.div>
