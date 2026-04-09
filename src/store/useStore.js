@@ -126,4 +126,13 @@ export const useStore = create((set, get) => ({
   },
 
   clearUser: () => set({ user: null, cart: [], favorites: [] }),
+
+  // ─── Search ────────────────────────────────────────────────────────────
+  searchQuery: '',
+  setSearchQuery: (q) => set({ searchQuery: q }),
+  clearSearch: () => set({ searchQuery: '' }),
+
+  // ─── Active Category ───────────────────────────────────────────────────
+  activeCategory: null,
+  setActiveCategory: (cat) => set({ activeCategory: cat }),
 }))

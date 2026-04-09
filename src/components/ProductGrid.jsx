@@ -3,11 +3,20 @@ import { motion } from 'framer-motion'
 import { Search, X } from 'lucide-react'
 import { products as staticProducts, categories } from '../data/products'
 import { supabase } from '../lib/supabase'
+import { useStore } from '../store/useStore'
 import ProductCard from './ProductCard'
 
 export default function ProductGrid({ activeCategory, onCategoryChange }) {
-  const [query, setQuery] = useState('')
+  const { searchQuery: navQuery, setSearchQuery: setNavQuery, clearSearch } = useStore()
+  const [localQuery, setLocalQuery] = useState('')
   const [dbProducts, setDbProducts] = useState([])
+
+  // Use navbar query if active, otherwise local
+  const query = navQuery || localQuery
+  const setQuery = (v) => {
+    setLocalQuery(v)
+    if (navQuery) clearSearch()
+  }
 
   useEffect(() => {
     supabase.from('products').select('*').eq('in_stock', true).then(({ data }) => {
@@ -98,14 +107,14 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           <Search size={17} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           <input
             type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={navQuery || localQuery}
+            onChange={(e) => { setLocalQuery(e.target.value); if (navQuery) clearSearch() }}
             placeholder="חפש מוצר..."
             className="w-full pr-11 pl-10 py-3 rounded-2xl border border-slate-200 bg-white text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all duration-150"
           />
           {query && (
             <button
-              onClick={() => setQuery('')}
+              onClick={() => { setLocalQuery(''); clearSearch() }}
               className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
             >
               <X size={15} />

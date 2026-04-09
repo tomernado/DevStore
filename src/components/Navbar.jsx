@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, Heart, Zap, Menu, X } from 'lucide-react'
+import { ShoppingCart, Heart, Zap, Menu, X, Search } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useStore } from '../store/useStore'
@@ -9,13 +9,14 @@ import { signInWithGoogle, signOut } from '../lib/supabase'
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeCategory, setActiveCategory] = useState(null)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const searchInputRef = useRef(null)
   const userMenuRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
 
-  const { toggleCart, getCartCount, getFavoritesCount, user, openAuthModal } = useStore()
+  const { toggleCart, getCartCount, getFavoritesCount, user, openAuthModal, searchQuery, setSearchQuery, clearSearch, activeCategory, setActiveCategory } = useStore()
   const cartCount = getCartCount()
   const favCount = getFavoritesCount()
 
@@ -28,8 +29,24 @@ export default function Navbar() {
   // Reset active pill when navigating away from home
   useEffect(() => {
     if (location.pathname !== '/') setActiveCategory(null)
-    else if (location.state?.category !== undefined) setActiveCategory(location.state.category)
-  }, [location])
+  }, [location.pathname])
+
+  // Auto-focus search input when opened
+  useEffect(() => {
+    if (searchOpen) {
+      setTimeout(() => searchInputRef.current?.focus(), 50)
+    }
+  }, [searchOpen])
+
+  const openSearch = () => {
+    setSearchOpen(true)
+    navigate('/', { state: { category: activeCategory } })
+  }
+
+  const closeSearch = () => {
+    setSearchOpen(false)
+    clearSearch()
+  }
 
   const handleLogin = async () => {
     try { await signInWithGoogle() }
@@ -55,13 +72,13 @@ export default function Navbar() {
 
   const handleCategoryClick = (catId) => {
     setActiveCategory(catId)
-    navigate('/', { state: { category: catId } })
+    navigate('/')
     setMobileOpen(false)
   }
 
   const handleAll = () => {
     setActiveCategory(null)
-    navigate('/', { state: { category: null } })
+    navigate('/')
   }
 
   return (
@@ -109,31 +126,87 @@ export default function Navbar() {
           </Link>
 
           {/* ── Desktop nav ─────────────────────────────────────── */}
-          <nav className="hidden md:flex items-center gap-0.5">
-            {/* "הכל" pill */}
-            <NavPill
-              active={activeCategory === null && location.pathname === '/'}
-              onClick={handleAll}
-            >
-              הכל
-            </NavPill>
-
-            {/* Thin divider */}
-            <div className="w-px h-5 bg-slate-200 mx-1" />
-
-            {categories.map((cat) => (
-              <NavPill
-                key={cat.id}
-                active={activeCategory === cat.id}
-                onClick={() => handleCategoryClick(cat.id)}
-              >
-                {cat.label}
-              </NavPill>
-            ))}
+          <nav className="hidden md:flex items-center gap-0.5 flex-1 justify-center px-4">
+            <AnimatePresence mode="wait">
+              {searchOpen ? (
+                <motion.div
+                  key="search-bar"
+                  initial={{ opacity: 0, scaleX: 0.85 }}
+                  animate={{ opacity: 1, scaleX: 1 }}
+                  exit={{ opacity: 0, scaleX: 0.85 }}
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center w-full max-w-sm relative"
+                >
+                  <Search size={15} className="absolute right-3 text-violet-500 pointer-events-none" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="חפש מוצר..."
+                    className="w-full pr-9 pl-8 py-2 rounded-xl border border-violet-300 bg-violet-50 text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100 transition-all"
+                  />
+                  {searchQuery && (
+                    <button onClick={clearSearch} className="absolute left-3 text-slate-400 hover:text-slate-700 transition-colors">
+                      <X size={13} />
+                    </button>
+                  )}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="nav-pills"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="flex items-center gap-0.5"
+                >
+                  <NavPill
+                    active={activeCategory === null && location.pathname === '/'}
+                    onClick={handleAll}
+                  >
+                    הכל
+                  </NavPill>
+                  <div className="w-px h-5 bg-slate-200 mx-1" />
+                  {categories.map((cat) => (
+                    <NavPill
+                      key={cat.id}
+                      active={activeCategory === cat.id}
+                      onClick={() => handleCategoryClick(cat.id)}
+                    >
+                      {cat.label}
+                    </NavPill>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </nav>
 
           {/* ── Right actions ───────────────────────────────────── */}
           <div className="flex items-center gap-1">
+            {/* Search toggle — desktop only */}
+            <motion.button
+              onClick={searchOpen ? closeSearch : openSearch}
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.93 }}
+              className={`hidden md:flex relative w-10 h-10 items-center justify-center rounded-xl transition-all duration-150 ${
+                searchOpen
+                  ? 'text-violet-600 bg-violet-50'
+                  : 'text-slate-500 hover:text-violet-600 hover:bg-violet-50'
+              }`}
+              aria-label="חיפוש"
+            >
+              <AnimatePresence mode="wait">
+                {searchOpen
+                  ? <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ opacity: 0 }}><X size={18} /></motion.span>
+                  : <motion.span key="s" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ opacity: 0 }}><Search size={18} /></motion.span>
+                }
+              </AnimatePresence>
+              {searchQuery && !searchOpen && (
+                <span className="absolute -top-1 -left-1 w-2.5 h-2.5 bg-violet-600 rounded-full" />
+              )}
+            </motion.button>
+
             {/* Favorites */}
             <IconButton
               onClick={() => navigate('/favorites')}
