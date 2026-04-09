@@ -15,7 +15,7 @@ async function handleCheckout({ cart, clearCart, closeCart, navigate, setProcess
     await emailjs.send(
       'service_05liath',
       'template_q17npkm',
-      { items, total: `₪${total.toLocaleString()}` },
+      { items, total: `₪${total.toLocaleString()}`, to_email: 'tomernado1233@gmail.com' },
       'puqZNBkJ-_xa9TNMX'
     )
   } catch (err) {
