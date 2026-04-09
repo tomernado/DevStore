@@ -45,17 +45,15 @@ async function handleCheckout({ cart, shipping, user, clearCart, closeCart, setP
     })
     if (error || !data?.url) throw new Error(error?.message ?? 'No URL')
 
-    // Save order to Supabase
-    if (user?.id) {
-      try {
-        await supabase.from('orders').insert([{
-          user_id: user.id,
-          items: cart,
-          total_amount: total,
-          shipping,
-        }])
-      } catch (_) {}
-    }
+    // Save order to Supabase (always, even if not logged in)
+    try {
+      await supabase.from('orders').insert([{
+        user_id: user?.id ?? null,
+        items: cart,
+        total_amount: total,
+        shipping,
+      }])
+    } catch (_) {}
 
     clearCart()
     closeCart()
