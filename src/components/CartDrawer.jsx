@@ -13,12 +13,13 @@ async function handleCheckout({ cart, clearCart, closeCart, setProcessing }) {
 
   // Send notification email
   try {
-    await emailjs.send(
+    const result = await emailjs.send(
       'service_ifdx81g',
       'template_q17npkm',
       { items, total: `₪${total.toLocaleString()}`, to_email: 'tomernado1233@gmail.com' },
       'puqZNBkJ-_xa9TNMX'
     )
+    console.log('EmailJS success:', result)
   } catch (err) {
     console.error('EmailJS error:', err)
   }
@@ -37,11 +38,7 @@ async function handleCheckout({ cart, clearCart, closeCart, setProcessing }) {
     if (error || !data?.url) throw new Error(error?.message ?? 'No URL')
     clearCart()
     closeCart()
-    // Open Stripe in a centered popup so the store is visible behind
-    const w = 520, h = 700
-    const left = Math.max(0, (window.screen.width - w) / 2)
-    const top = Math.max(0, (window.screen.height - h) / 2)
-    window.open(data.url, 'stripe-checkout', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`)
+    window.location.href = data.url
   } catch (err) {
     console.error('Stripe error:', err)
     setProcessing(false)
