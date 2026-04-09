@@ -41,15 +41,15 @@ function StatCard({ icon: Icon, label, value, sub, color }) {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex items-start gap-4"
+      className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex items-center gap-3"
     >
-      <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
-        <Icon size={20} />
+      <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
+        <Icon size={17} />
       </div>
       <div className="min-w-0">
-        <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">{label}</p>
-        <p className="text-slate-900 text-2xl font-extrabold tracking-tight truncate">{value}</p>
-        {sub && <p className="text-slate-400 text-xs mt-0.5">{sub}</p>}
+        <p className="text-slate-400 text-[11px] font-semibold mb-0.5">{label}</p>
+        <p className="text-slate-900 text-lg font-bold truncate leading-tight">{value}</p>
+        {sub && <p className="text-slate-400 text-[11px] mt-0.5">{sub}</p>}
       </div>
     </motion.div>
   )
@@ -334,38 +334,42 @@ export default function Admin() {
             <div className="py-14 text-center text-slate-400 text-sm">אין הזמנות עדיין</div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full">
                 <thead>
-                  <tr className="text-right border-b border-slate-100">
-                    <th className="px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">מזהה</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">תאריך</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">לקוח</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">סכום</th>
-                    <th className="px-6 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">סטטוס</th>
+                  <tr className="text-right border-b border-slate-100 bg-slate-50/60">
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">מזהה הזמנה</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">תאריך</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">לקוח</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">סכום</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">סטטוס</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-50">
+                <tbody className="divide-y divide-slate-100">
                   {orders.map((o, i) => (
                     <motion.tr
                       key={o.id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: i * 0.03 }}
-                      className="hover:bg-slate-50/60 transition-colors"
+                      className="hover:bg-slate-50 transition-colors"
                     >
-                      <td className="px-6 py-3.5 font-mono text-xs text-slate-400">
+                      <td className="px-6 py-5 text-xs text-slate-400 font-medium">
                         #{String(o.id).slice(0, 8)}…
                       </td>
-                      <td className="px-6 py-3.5 text-slate-600 text-xs whitespace-nowrap">
-                        {new Date(o.created_at).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                      <td className="px-6 py-5 text-slate-600 text-sm whitespace-nowrap">
+                        {new Date(o.created_at).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                        <span className="text-slate-400 text-xs mr-1">
+                          {new Date(o.created_at).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
                       </td>
-                      <td className="px-6 py-3.5 text-slate-700 text-xs max-w-[140px] truncate">
-                        {o.shipping?.name || o.shipping?.email || '—'}
+                      <td className="px-6 py-5 text-slate-800 text-sm font-medium max-w-[160px] truncate">
+                        {o.shipping?.name || '—'}
+                        {o.shipping?.phone && <span className="block text-slate-400 text-xs font-normal">{o.shipping.phone}</span>}
                       </td>
-                      <td className="px-6 py-3.5 font-bold text-slate-900 font-mono text-sm">
+                      <td className="px-6 py-5 text-slate-900 text-base font-bold">
                         ₪{(o.total_amount ?? 0).toLocaleString()}
                       </td>
-                      <td className="px-6 py-3.5">
+                      <td className="px-6 py-5">
                         <StatusDropdown
                           orderId={o.id}
                           current={o.status ?? 'בטיפול'}
