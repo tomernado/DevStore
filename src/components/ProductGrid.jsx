@@ -1,18 +1,37 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Search, X } from 'lucide-react'
-import { products, categories } from '../data/products'
+import { products as staticProducts, categories } from '../data/products'
+import { supabase } from '../lib/supabase'
 import ProductCard from './ProductCard'
 
 export default function ProductGrid({ activeCategory, onCategoryChange }) {
   const [query, setQuery] = useState('')
+  const [dbProducts, setDbProducts] = useState([])
 
-  const filtered = products.filter((p) => {
+  useEffect(() => {
+    supabase.from('products').select('*').eq('in_stock', true).then(({ data }) => {
+      if (data?.length) setDbProducts(data.map(p => ({
+        id: `db-${p.id}`,
+        name: p.name,
+        nameHe: p.name_he || p.name,
+        price: p.price,
+        category: p.category,
+        image: p.image,
+        description: p.description,
+        badge: p.badge,
+      })))
+    })
+  }, [])
+
+  const allProducts = [...staticProducts, ...dbProducts]
+
+  const filtered = allProducts.filter((p) => {
     const matchCat = !activeCategory || p.category === activeCategory
     const q = query.trim().toLowerCase()
     const matchQuery = !q ||
-      p.nameHe.toLowerCase().includes(q) ||
-      p.name.toLowerCase().includes(q) ||
+      p.nameHe?.toLowerCase().includes(q) ||
+      p.name?.toLowerCase().includes(q) ||
       p.description?.toLowerCase().includes(q)
     return matchCat && matchQuery
   })
