@@ -5,8 +5,10 @@
     <script>
       // GitHub Pages SPA fix: store the path and redirect to index
       var path = window.location.pathname.replace('/DevStore', '') || '/';
-      sessionStorage.setItem('spa_redirect', path + window.location.search + window.location.hash);
-      window.location.replace('/DevStore/');
+      var search = window.location.search;
+      var hash = window.location.hash;
+      sessionStorage.setItem('spa_redirect', path + search + hash);
+      window.location.replace('/DevStore/?r=1');
     </script>
   </head>
   <body></body>

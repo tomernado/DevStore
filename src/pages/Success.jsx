@@ -1,26 +1,29 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import confetti from 'canvas-confetti'
-import { CheckCircle2, ArrowLeft, ShoppingBag } from 'lucide-react'
+import { CheckCircle2, ShoppingBag } from 'lucide-react'
 
 export default function Success() {
-  useEffect(() => {
-    // Burst confetti from both sides
-    const fire = (particleRatio, opts) => {
-      confetti({
-        origin: { y: 0.6 },
-        ...opts,
-        particleCount: Math.floor(200 * particleRatio),
-      })
-    }
+  const navigate = useNavigate()
+  const [seconds, setSeconds] = useState(10)
 
+  useEffect(() => {
+    // Confetti burst
+    const fire = (ratio, opts) =>
+      confetti({ origin: { y: 0.6 }, ...opts, particleCount: Math.floor(200 * ratio) })
     fire(0.25, { spread: 26, startVelocity: 55, colors: ['#7c3aed', '#a78bfa'] })
     fire(0.2,  { spread: 60, colors: ['#6d28d9', '#c4b5fd'] })
     fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8, colors: ['#8b5cf6', '#ddd6fe'] })
     fire(0.1,  { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 })
     fire(0.1,  { spread: 120, startVelocity: 45, colors: ['#7c3aed', '#ede9fe'] })
   }, [])
+
+  useEffect(() => {
+    if (seconds <= 0) { navigate('/'); return }
+    const t = setTimeout(() => setSeconds((s) => s - 1), 1000)
+    return () => clearTimeout(t)
+  }, [seconds, navigate])
 
   return (
     <motion.div
@@ -31,6 +34,7 @@ export default function Success() {
       className="min-h-screen bg-white flex items-center justify-center px-4"
     >
       <div className="max-w-md w-full text-center">
+
         {/* Icon */}
         <motion.div
           initial={{ scale: 0, rotate: -15 }}
@@ -90,22 +94,42 @@ export default function Success() {
           </div>
         </motion.div>
 
-        {/* CTA */}
+        {/* Countdown */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.55, duration: 0.45 }}
+          className="flex flex-col items-center gap-4"
         >
-          <Link to="/">
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-base shadow-violet transition-colors duration-150"
+          {/* Circular countdown */}
+          <div className="relative w-16 h-16">
+            <svg className="w-full h-full -rotate-90" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="28" fill="none" stroke="#f1f5f9" strokeWidth="4" />
+              <motion.circle
+                cx="32" cy="32" r="28"
+                fill="none"
+                stroke="#7c3aed"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 28}
+                animate={{ strokeDashoffset: (2 * Math.PI * 28) * (1 - seconds / 10) }}
+                transition={{ duration: 0.5 }}
+              />
+            </svg>
+            <span
+              className="absolute inset-0 flex items-center justify-center text-xl font-bold text-violet-600"
+              style={{ fontFamily: 'var(--font-mono)' }}
             >
-              <ArrowLeft size={17} />
-              חזור לחנות
-            </motion.button>
-          </Link>
+              {seconds}
+            </span>
+          </div>
+          <p className="text-slate-400 text-sm">חוזר לחנות תוך {seconds} שניות</p>
+          <button
+            onClick={() => navigate('/')}
+            className="text-violet-600 hover:text-violet-700 font-semibold text-sm underline underline-offset-2 transition-colors"
+          >
+            חזור עכשיו
+          </button>
         </motion.div>
       </div>
     </motion.div>
