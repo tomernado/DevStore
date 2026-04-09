@@ -37,7 +37,11 @@ async function handleCheckout({ cart, clearCart, closeCart, setProcessing }) {
     if (error || !data?.url) throw new Error(error?.message ?? 'No URL')
     clearCart()
     closeCart()
-    window.location.href = data.url
+    // Open Stripe in a centered popup so the store is visible behind
+    const w = 520, h = 700
+    const left = Math.max(0, (window.screen.width - w) / 2)
+    const top = Math.max(0, (window.screen.height - h) / 2)
+    window.open(data.url, 'stripe-checkout', `width=${w},height=${h},left=${left},top=${top},resizable=yes,scrollbars=yes`)
   } catch (err) {
     console.error('Stripe error:', err)
     setProcessing(false)
