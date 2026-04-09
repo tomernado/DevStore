@@ -1,166 +1,248 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CheckCircle2, ArrowLeft, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Sparkles, ChevronLeft, ChevronRight, Zap, Shield, Truck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-const trustPoints = [
-  'איכות ללא פשרות — כל מוצר נבחר ביד',
-  'עיצוב ארגונומי מתקדם לשעות עבודה ארוכות',
-  'אחריות יבואן רשמי + שירות לאחר מכירה',
-]
-
-// Featured products that rotate in the hero visual
 const featured = [
   {
-    id: 1,
-    emoji: '⌨️',
-    name: 'Keychron Q1 Pro',
-    nameHe: 'מקלדת מכנית Hall Effect',
-    price: 549,
+    id: 1, emoji: '⌨️', name: 'Keychron Q1 Pro', nameHe: 'מקלדת מכנית Hall Effect', price: 549,
     image: 'https://images.unsplash.com/photo-1553481187-be93c21490a9?auto=format&fit=crop&w=1000&q=85',
-    tag: 'הנמכר ביותר',
+    tag: 'הנמכר ביותר', color: '#7c3aed',
   },
   {
-    id: 14,
-    emoji: '🪑',
-    name: 'Herman Miller Aeron',
-    nameHe: 'כיסא ארגונומי אייקוני',
-    price: 3999,
+    id: 14, emoji: '🪑', name: 'Herman Miller Aeron', nameHe: 'כיסא ארגונומי אייקוני', price: 3999,
     image: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=1000&q=85',
-    tag: 'השקעה לחיים',
+    tag: 'השקעה לחיים', color: '#0d9488',
   },
   {
-    id: 9,
-    emoji: '🖥️',
-    name: 'LG UltraFine 5K',
-    nameHe: 'מסך 5K Thunderbolt 4',
-    price: 2149,
+    id: 9, emoji: '🖥️', name: 'LG UltraFine 5K', nameHe: 'מסך 5K Thunderbolt 4', price: 2149,
     image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85',
-    tag: 'פרמיום',
+    tag: 'פרמיום', color: '#1d4ed8',
   },
   {
-    id: 21,
-    emoji: '🎧',
-    name: 'Jabra Evolve2 85',
-    nameHe: 'אוזניות ANC מקצועיות',
-    price: 1149,
+    id: 21, emoji: '🎧', name: 'Jabra Evolve2 85', nameHe: 'אוזניות ANC מקצועיות', price: 1149,
     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85',
-    tag: 'פרמיום',
+    tag: 'פוקוס מקסימלי', color: '#db2777',
+  },
+  {
+    id: 3, emoji: '🖱️', name: 'Logitech MX Master 3S', nameHe: 'עכבר אלחוטי מקצועי', price: 399,
+    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85',
+    tag: 'חדש בחנות', color: '#ea580c',
+  },
+  {
+    id: 7, emoji: '💡', name: 'Elgato Key Light', nameHe: 'תאורת LED מקצועית', price: 449,
+    image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1000&q=85',
+    tag: 'לסטרימרים', color: '#d97706',
   },
 ]
 
-const INTERVAL = 3000
+const INTERVAL = 3500
 
-const fadeVariants = {
-  enter: { opacity: 0, scale: 1.03 },
-  center: { opacity: 1, scale: 1, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, scale: 0.98, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+const slideV = {
+  enter: (d) => ({ opacity: 0, x: d > 0 ? 70 : -70, scale: 0.95 }),
+  center: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+  exit: (d) => ({ opacity: 0, x: d > 0 ? -70 : 70, scale: 0.95, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }),
 }
 
-const infoVariants = {
-  enter: { opacity: 0, y: 10 },
-  center: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-  exit: { opacity: 0, y: -10, transition: { duration: 0.35 } },
-}
-
-const textFadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] },
-  }),
+function staggerV(i) {
+  return {
+    hidden: { opacity: 0, y: 28, clipPath: 'inset(0 0 100% 0)' },
+    visible: {
+      opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)',
+      transition: { duration: 0.65, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
+    },
+  }
 }
 
 export default function Hero({ onShopNow }) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [dir, setDir] = useState(1)
 
   useEffect(() => {
     if (paused) return
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % featured.length)
-    }, INTERVAL)
-    return () => clearInterval(timer)
+    const t = setInterval(() => { setDir(1); setIndex((p) => (p + 1) % featured.length) }, INTERVAL)
+    return () => clearInterval(t)
   }, [paused])
 
   const current = featured[index]
-  const prev = () => setIndex((i) => (i - 1 + featured.length) % featured.length)
-  const next = () => setIndex((i) => (i + 1) % featured.length)
+  const goPrev = () => { setDir(-1); setIndex((i) => (i - 1 + featured.length) % featured.length) }
+  const goNext = () => { setDir(1); setIndex((i) => (i + 1) % featured.length) }
+  const goTo = (i) => { setDir(i > index ? 1 : -1); setIndex(i) }
 
   return (
-    <section className="relative bg-white min-h-[85vh] flex items-center overflow-visible">
-      {/* subtle bg blob */}
-      <div
-        className="absolute -top-40 left-0 w-[500px] h-[500px] rounded-full opacity-[0.05] pointer-events-none"
-        style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 70%)' }}
-      />
+    <section
+      className="relative overflow-visible"
+      style={{
+        minHeight: '92vh',
+        display: 'flex',
+        alignItems: 'center',
+        background: `
+          radial-gradient(ellipse 90% 70% at top right, rgba(167,139,250,0.14) 0%, transparent 55%),
+          radial-gradient(ellipse 70% 60% at bottom left, rgba(99,102,241,0.1) 0%, transparent 55%),
+          radial-gradient(ellipse 55% 55% at 65% 10%, rgba(236,72,153,0.06) 0%, transparent 50%),
+          #ffffff
+        `,
+      }}
+    >
+      {/* Background effects — clipped so they don't overflow the page */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Giant faded wordmark */}
+        <div
+          className="absolute hidden lg:block select-none"
+          style={{
+            top: '50%', left: '-1%', transform: 'translateY(-50%)',
+            fontSize: '21rem', fontFamily: 'var(--font-display)', fontWeight: 800,
+            color: '#7c3aed', opacity: 0.027, lineHeight: 1,
+            letterSpacing: '-0.04em', whiteSpace: 'nowrap',
+          }}
+        >
+          DEV
+        </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-24 pb-10 lg:pt-0 lg:py-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
+        {/* Top accent line */}
+        <div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.45) 50%, transparent)' }}
+        />
 
-          {/* ── RIGHT COLUMN: Text (RTL = appears right) ───────── */}
+        {/* Subtle animated orbs */}
+        <motion.div
+          animate={{ scale: [1, 1.08, 1], opacity: [0.07, 0.12, 0.07] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute rounded-full blur-3xl"
+          style={{ width: 480, height: 480, top: '-10%', right: '-8%', background: '#7c3aed' }}
+        />
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.09, 0.05] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="absolute rounded-full blur-3xl"
+          style={{ width: 320, height: 320, bottom: '0%', left: '-5%', background: '#6366f1' }}
+        />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-12 lg:pt-16 lg:pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+
+          {/* ── TEXT COLUMN ─────────────────────────── */}
           <div>
-            <motion.div custom={0} variants={textFadeUp} initial="hidden" animate="visible"
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-50 border border-violet-100 text-violet-700 text-sm font-medium mb-8"
+            {/* Eyebrow with pulsing dot */}
+            <motion.div
+              variants={staggerV(0)} initial="hidden" animate="visible"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-8"
+              style={{
+                background: 'rgba(124,58,237,0.07)',
+                border: '1px solid rgba(124,58,237,0.22)',
+                color: '#7c3aed',
+              }}
             >
-              <Sparkles size={13} />
-              <span>הקולקציה החדשה — 2025</span>
+              <span className="relative flex h-2 w-2">
+                <span
+                  className="absolute inline-flex h-full w-full rounded-full opacity-75"
+                  style={{ background: '#a78bfa', animation: 'ping 1.4s cubic-bezier(0,0,0.2,1) infinite' }}
+                />
+                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#7c3aed' }} />
+              </span>
+              <Sparkles size={12} />
+              <span style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
+                הקולקציה החדשה — 2025
+              </span>
             </motion.div>
 
-            <motion.h1 custom={1} variants={textFadeUp} initial="hidden" animate="visible"
-              className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-slate-900 leading-[1.12] tracking-tight mb-5"
-            >
-              ציוד פרימיום לסביבת{' '}
-              <span className="text-violet-600">עבודה שמעוררת</span>{' '}
-              השראה
-            </motion.h1>
+            {/* Headline */}
+            <motion.div variants={staggerV(1)} initial="hidden" animate="visible" className="mb-6">
+              <h1
+                className="font-extrabold leading-[1.07] tracking-tight text-slate-900"
+                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.6rem, 5.5vw, 4.3rem)' }}
+              >
+                ציוד פרימיום{' '}
+                <br className="hidden sm:block" />
+                לסביבת עבודה{' '}
+                <span className="relative inline-block" style={{ color: '#7c3aed' }}>
+                  שמעוררת השראה
+                  {/* Animated wavy underline */}
+                  <svg
+                    viewBox="0 0 320 14"
+                    className="absolute -bottom-2 left-0 w-full"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                    fill="none"
+                  >
+                    <motion.path
+                      d="M2 9 Q40 3 80 9 Q120 15 160 9 Q200 3 240 9 Q280 15 318 9"
+                      stroke="#7c3aed"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 0.55 }}
+                      transition={{ duration: 0.9, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
+                    />
+                  </svg>
+                </span>
+              </h1>
+            </motion.div>
 
-            <motion.p custom={2} variants={textFadeUp} initial="hidden" animate="visible"
-              className="text-lg text-slate-500 leading-relaxed mb-9 max-w-lg"
+            {/* Subtext */}
+            <motion.p
+              variants={staggerV(2)} initial="hidden" animate="visible"
+              className="text-slate-500 text-base leading-relaxed mb-9 max-w-md"
             >
-              כי הכלים שאתה עובד איתם חשובים לא פחות מהקוד שאתה כותב. כל מוצר
-              ב-DevStore נבחר ביד, נבדק לעומק, ומגיע עם אחריות מלאה.
+              כי הכלים שאתה עובד איתם חשובים לא פחות מהקוד שאתה כותב. כל מוצר ב-DevStore נבחר ביד,
+              נבדק לעומק, ומגיע עם אחריות מלאה.
             </motion.p>
 
-            <motion.ul custom={3} variants={textFadeUp} initial="hidden" animate="visible"
-              className="hidden sm:block space-y-3 mb-11"
+            {/* Trust chips */}
+            <motion.div
+              variants={staggerV(3)} initial="hidden" animate="visible"
+              className="flex flex-wrap gap-2 mb-10"
             >
-              {trustPoints.map((point) => (
-                <li key={point} className="flex items-start gap-3">
-                  <CheckCircle2 size={18} className="text-violet-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-slate-700 text-base">{point}</span>
-                </li>
+              {[
+                { icon: Shield, label: 'אחריות יבואן' },
+                { icon: Truck, label: 'משלוח 24 שעות' },
+                { icon: Zap, label: 'בחירת מומחים' },
+              ].map(({ icon: Icon, label }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 bg-white border border-slate-100"
+                  style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+                >
+                  <Icon size={13} className="text-violet-500 flex-shrink-0" />
+                  {label}
+                </div>
               ))}
-            </motion.ul>
+            </motion.div>
 
-            <motion.div custom={4} variants={textFadeUp} initial="hidden" animate="visible"
-              className="flex flex-col sm:flex-row items-start gap-4"
+            {/* CTAs */}
+            <motion.div
+              variants={staggerV(4)} initial="hidden" animate="visible"
+              className="flex flex-col sm:flex-row items-start gap-3 mb-14"
             >
               <motion.button
                 onClick={onShopNow}
                 whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-base shadow-violet transition-colors duration-150"
+                className="flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-base transition-colors duration-150 shadow-violet"
               >
-                <span>גלה את הקטלוג</span>
+                גלה את הקטלוג
                 <ArrowLeft size={17} />
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.01 }}
                 onClick={onShopNow}
-                className="flex items-center gap-2 px-6 py-4 rounded-2xl text-slate-500 hover:text-violet-600 font-semibold text-base transition-colors duration-150"
+                whileHover={{ scale: 1.01 }}
+                className="flex items-center gap-2 px-6 py-4 rounded-2xl text-slate-400 hover:text-violet-600 font-semibold text-sm transition-colors duration-150"
               >
                 צפה בכל המוצרים
               </motion.button>
             </motion.div>
 
             {/* Stats */}
-            <motion.div custom={5} variants={textFadeUp} initial="hidden" animate="visible"
-              className="hidden sm:grid mt-14 pt-8 border-t border-slate-100 grid-cols-3 gap-6"
+            <motion.div
+              variants={staggerV(5)} initial="hidden" animate="visible"
+              className="hidden sm:grid grid-cols-3 gap-6 pt-8 border-t border-slate-100"
             >
               {[
                 { value: '200+', label: 'מוצרים נבחרים' },
-                { value: '4.9★', label: 'ממוצע ביקורות' },
+                { value: '4.9★', label: 'דירוג לקוחות' },
                 { value: '24h', label: 'משלוח מהיר' },
               ].map((s) => (
                 <div key={s.label}>
@@ -173,30 +255,40 @@ export default function Hero({ onShopNow }) {
             </motion.div>
           </div>
 
-          {/* ── LEFT COLUMN: Cycling product visual ────────────── */}
+          {/* ── PRODUCT VISUAL ─────────────────────── */}
           <motion.div
-            initial={{ opacity: 0, x: -32 }}
+            initial={{ opacity: 0, x: -36 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            className="relative block order-first lg:order-last"
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="relative order-first lg:order-last"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >
-            {/* Floating wrapper — no float animation on mobile (saves paint) */}
             <motion.div
               animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ willChange: 'transform' }}
+              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
               className="relative mx-4 lg:mx-0"
             >
-              {/* Main image — cross-fade */}
-              <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-100 aspect-[4/3] lg:aspect-[4/3] bg-slate-100 relative">
-                <AnimatePresence mode="wait">
+              {/* Color glow behind image — transitions with product */}
+              <motion.div
+                animate={{ opacity: [0.18, 0.26, 0.18] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute inset-6 rounded-3xl blur-3xl pointer-events-none -z-10"
+                style={{ background: current.color, transition: 'background 0.7s ease' }}
+              />
+
+              {/* Main image */}
+              <div
+                className="rounded-3xl overflow-hidden aspect-[4/3] bg-slate-100 relative"
+                style={{ boxShadow: '0 24px 64px -16px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)' }}
+              >
+                <AnimatePresence mode="wait" custom={dir}>
                   <motion.img
-                    key={current.image}
+                    key={current.id}
                     src={current.image}
                     alt={current.nameHe}
-                    variants={fadeVariants}
+                    custom={dir}
+                    variants={slideV}
                     initial="enter"
                     animate="center"
                     exit="exit"
@@ -204,20 +296,22 @@ export default function Hero({ onShopNow }) {
                   />
                 </AnimatePresence>
 
-                {/* Prev / Next controls */}
+                {/* Subtle vignette at bottom */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 45%)' }}
+                />
+
+                {/* Prev / Next */}
                 <div className="absolute inset-0 flex items-center justify-between px-3 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
                   <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={prev}
+                    whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={goPrev}
                     className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-md text-slate-700 pointer-events-auto"
                   >
                     <ChevronRight size={18} />
                   </motion.button>
                   <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={next}
+                    whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={goNext}
                     className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-md text-slate-700 pointer-events-auto"
                   >
                     <ChevronLeft size={18} />
@@ -229,68 +323,104 @@ export default function Hero({ onShopNow }) {
                   {featured.map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => setIndex(i)}
-                      className={`transition-all duration-300 rounded-full ${
-                        i === index
-                          ? 'w-5 h-2 bg-violet-600'
-                          : 'w-2 h-2 bg-white/60 hover:bg-white'
-                      }`}
+                      onClick={() => goTo(i)}
+                      className="transition-all duration-300 rounded-full"
+                      style={{
+                        width: i === index ? '18px' : '6px',
+                        height: '6px',
+                        background: i === index ? '#ffffff' : 'rgba(255,255,255,0.45)',
+                      }}
                     />
                   ))}
                 </div>
               </div>
 
-              {/* Product badge — top right: cross-fades with product info */}
+              {/* Product badge — top */}
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`badge-top-${current.id}`}
-                  variants={infoVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="absolute top-3 right-3 lg:-top-5 lg:-right-5 bg-white rounded-2xl shadow-lg border border-slate-100 px-3 py-2 lg:px-4 lg:py-3 flex items-center gap-2 z-10"
+                  key={`badge-${current.id}`}
+                  initial={{ opacity: 0, y: 8, scale: 0.94 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.94 }}
+                  transition={{ duration: 0.38 }}
+                  className="absolute top-3 right-3 lg:-top-5 lg:-right-5 bg-white rounded-2xl border border-slate-100 px-3 py-2.5 lg:px-4 lg:py-3 flex items-center gap-2.5 z-10"
+                  style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
                 >
                   <span className="text-xl">{current.emoji}</span>
                   <div>
                     <p className="text-slate-900 font-bold text-sm leading-tight">{current.nameHe}</p>
-                    <p className="text-violet-600 text-xs font-semibold" style={{ fontFamily: 'var(--font-mono)' }}>
+                    <p className="text-xs font-bold mt-0.5 transition-colors duration-500"
+                      style={{ fontFamily: 'var(--font-mono)', color: current.color }}>
                       ₪{current.price.toLocaleString()}
                     </p>
                   </div>
                   <Link
                     to={`/product/${current.id}`}
-                    className="mr-1 text-xs text-violet-500 hover:text-violet-700 font-medium underline underline-offset-2 transition-colors"
+                    className="text-xs font-semibold underline underline-offset-2 transition-colors mr-1"
+                    style={{ color: current.color }}
                   >
                     פרטים
                   </Link>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Bottom-left badge: tag */}
+              {/* Tag badge — bottom left */}
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={`badge-bottom-${current.id}`}
-                  variants={infoVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="absolute bottom-3 left-3 lg:-bottom-5 lg:-left-5 bg-violet-600 rounded-2xl shadow-lg px-3 py-2 lg:px-4 lg:py-3 text-white z-10"
+                  key={`tag-${current.id}`}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  transition={{ duration: 0.35 }}
+                  className="absolute bottom-3 left-3 lg:-bottom-5 lg:-left-5 rounded-2xl px-4 py-2.5 text-white z-10"
+                  style={{
+                    background: current.color,
+                    boxShadow: `0 8px 24px -4px ${current.color}99`,
+                    transition: 'background 0.5s ease, box-shadow 0.5s ease',
+                  }}
                 >
-                  <p className="text-xs opacity-80">קטגוריה נבחרת</p>
-                  <p className="font-bold text-base">{current.tag}</p>
+                  <p className="text-xs opacity-80 font-medium">קטגוריה נבחרת</p>
+                  <p className="font-bold text-sm">{current.tag}</p>
                 </motion.div>
               </AnimatePresence>
             </motion.div>
 
-            {/* BG glow */}
-            <div
-              className="absolute -z-10 -inset-8 rounded-full opacity-[0.06]"
-              style={{ background: 'radial-gradient(circle, #7c3aed 0%, transparent 65%)' }}
-            />
+            {/* Thumbnail strip */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="flex justify-center gap-2 mt-12"
+            >
+              {featured.map((p, i) => (
+                <motion.button
+                  key={p.id}
+                  onClick={() => goTo(i)}
+                  whileHover={{ scale: 1.12, y: -3 }}
+                  whileTap={{ scale: 0.94 }}
+                  className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0"
+                  style={{
+                    border: `2.5px solid ${i === index ? current.color : 'rgba(0,0,0,0.07)'}`,
+                    opacity: i === index ? 1 : 0.5,
+                    boxShadow: i === index ? `0 4px 16px -4px ${current.color}88` : 'none',
+                    transition: 'border-color 0.4s, opacity 0.3s, box-shadow 0.4s',
+                  }}
+                >
+                  <img src={p.image} alt={p.nameHe} className="w-full h-full object-cover" />
+                </motion.button>
+              ))}
+            </motion.div>
           </motion.div>
 
         </div>
       </div>
+
+      {/* ping keyframe for the live dot */}
+      <style>{`
+        @keyframes ping {
+          75%, 100% { transform: scale(2); opacity: 0; }
+        }
+      `}</style>
     </section>
   )
 }
