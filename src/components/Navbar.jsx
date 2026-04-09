@@ -136,7 +136,7 @@ export default function Navbar() {
           <div className="flex items-center gap-1">
             {/* Favorites */}
             <IconButton
-              onClick={() => {}}
+              onClick={() => navigate('/favorites')}
               label="מועדפים"
               badge={favCount}
               className="hover:text-violet-600 hover:bg-violet-50"
@@ -270,6 +270,13 @@ export default function Navbar() {
                         </div>
                         <span className="text-sm text-slate-600 truncate">{user.email}</span>
                       </div>
+                      <Link
+                        to="/profile"
+                        onClick={() => setMobileOpen(false)}
+                        className="w-full flex items-center gap-2 px-4 py-3 rounded-xl bg-violet-50 hover:bg-violet-100 text-violet-700 text-sm font-bold tracking-tight transition-colors"
+                      >
+                        הפרופיל שלי
+                      </Link>
                       <button
                         onClick={handleLogout}
                         className="w-full px-4 py-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 text-sm font-bold tracking-tight transition-colors"
