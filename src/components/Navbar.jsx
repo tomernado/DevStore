@@ -291,14 +291,22 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
             ) : (
-              <motion.button
-                onClick={handleLogin}
-                whileHover={{ scale: 1.03, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-violet-600 text-white text-sm font-bold tracking-tight transition-colors duration-200 mr-1"
-              >
-                <span>התחברות</span>
-              </motion.button>
+              <div className="hidden md:flex items-center gap-2 mr-1">
+                <Link
+                  to="/admin"
+                  className="px-3 py-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 text-xs font-semibold transition-all"
+                >
+                  ניהול
+                </Link>
+                <motion.button
+                  onClick={handleLogin}
+                  whileHover={{ scale: 1.03, y: -1 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-violet-600 text-white text-sm font-bold tracking-tight transition-colors duration-200"
+                >
+                  <span>התחברות</span>
+                </motion.button>
+              </div>
             )}
 
             {/* Mobile toggle */}
@@ -406,12 +414,21 @@ export default function Navbar() {
                       </button>
                     </div>
                   ) : (
-                    <button
-                      onClick={handleLogin}
-                      className="w-full px-4 py-3 rounded-xl bg-slate-900 hover:bg-violet-600 text-white text-sm font-bold tracking-tight transition-colors"
-                    >
-                      התחברות עם Google
-                    </button>
+                    <div className="space-y-2">
+                      <button
+                        onClick={handleLogin}
+                        className="w-full px-4 py-3 rounded-xl bg-slate-900 hover:bg-violet-600 text-white text-sm font-bold tracking-tight transition-colors"
+                      >
+                        התחברות עם Google
+                      </button>
+                      <Link
+                        to="/admin"
+                        onClick={() => setMobileOpen(false)}
+                        className="w-full flex items-center justify-center px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-sm font-bold tracking-tight transition-colors"
+                      >
+                        ניהול
+                      </Link>
+                    </div>
                   )}
                 </div>
               </div>
