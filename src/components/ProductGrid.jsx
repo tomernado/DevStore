@@ -39,36 +39,16 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           >
             קולקציה
           </p>
-          <div className="flex items-end justify-between flex-wrap gap-4 mb-6">
+          <div className="flex items-end justify-between flex-wrap gap-4">
             <h2 className="text-3xl font-extrabold text-slate-900">{activeLabel}</h2>
             <p className="text-slate-400 text-sm" style={{ fontFamily: 'var(--font-mono)' }}>
               {filtered.length} מוצרים
             </p>
           </div>
-
-          {/* Search bar */}
-          <div className="relative">
-            <Search size={17} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="חפש מוצר..."
-              className="w-full pr-11 pl-10 py-3 rounded-2xl border border-slate-200 bg-white text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all duration-150"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery('')}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
-              >
-                <X size={15} />
-              </button>
-            )}
-          </div>
         </motion.div>
 
         {/* Category filter pills — horizontally scrollable on mobile */}
-        <div className="flex gap-2 mb-10 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
+        <div className="flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
           <button
             onClick={() => onCategoryChange(null)}
             className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
@@ -92,6 +72,26 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
               {cat.label}
             </button>
           ))}
+        </div>
+
+        {/* Search bar */}
+        <div className="relative mb-8">
+          <Search size={17} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="חפש מוצר..."
+            className="w-full pr-11 pl-10 py-3 rounded-2xl border border-slate-200 bg-white text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all duration-150"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery('')}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
+            >
+              <X size={15} />
+            </button>
+          )}
         </div>
 
         {/* Grid */}
