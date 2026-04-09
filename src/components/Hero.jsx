@@ -126,27 +126,24 @@ export default function Hero({ onShopNow }) {
 
           {/* ── TEXT COLUMN ─────────────────────────── */}
           <div>
-            {/* Eyebrow with pulsing dot */}
-            <motion.div
-              variants={staggerV(0)} initial="hidden" animate="visible"
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-8"
-              style={{
-                background: 'rgba(124,58,237,0.07)',
-                border: '1px solid rgba(124,58,237,0.22)',
-                color: '#7c3aed',
-              }}
-            >
-              <span className="relative flex h-2 w-2">
-                <span
-                  className="absolute inline-flex h-full w-full rounded-full opacity-75"
-                  style={{ background: '#a78bfa', animation: 'ping 1.4s cubic-bezier(0,0,0.2,1) infinite' }}
-                />
-                <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#7c3aed' }} />
-              </span>
-              <Sparkles size={12} />
-              <span style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.04em' }}>
-                DevStore × פרימיום
-              </span>
+            {/* Eyebrow CTA pill */}
+            <motion.div variants={staggerV(0)} initial="hidden" animate="visible" className="mb-8">
+              <motion.button
+                onClick={onShopNow}
+                whileHover={{ scale: 1.04, y: -1 }}
+                whileTap={{ scale: 0.96 }}
+                className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full text-sm font-bold transition-all duration-200"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(99,102,241,0.08) 100%)',
+                  border: '1px solid rgba(124,58,237,0.25)',
+                  color: '#7c3aed',
+                  boxShadow: '0 2px 12px rgba(124,58,237,0.1)',
+                }}
+              >
+                <Sparkles size={13} />
+                <span>גלה את החנות</span>
+                <ArrowLeft size={13} />
+              </motion.button>
             </motion.div>
 
             {/* Headline */}
