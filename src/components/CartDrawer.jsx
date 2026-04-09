@@ -4,22 +4,30 @@ import { X, ShoppingBag, Plus, Minus, Trash2, CreditCard, ArrowLeft, Loader2 } f
 import emailjs from '@emailjs/browser'
 import { supabase } from '../lib/supabase'
 import { useStore } from '../store/useStore'
+import ShippingModal from './ShippingModal'
 
-async function handleCheckout({ cart, clearCart, closeCart, setProcessing }) {
+async function handleCheckout({ cart, shipping, clearCart, closeCart, setProcessing }) {
   setProcessing(true)
 
   const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
   const items = cart.map((i) => `${i.nameHe} ×${i.quantity} — ₪${(i.price * i.quantity).toLocaleString()}`).join('\n')
 
-  // Send notification email
+  // Send notification email with shipping details
   try {
-    const result = await emailjs.send(
+    await emailjs.send(
       'service_ifdx81g',
       'template_q17npkm',
-      { items, total: `₪${total.toLocaleString()}`, to_email: 'tomernado1233@gmail.com' },
+      {
+        items,
+        total: `₪${total.toLocaleString()}`,
+        to_email: 'tomernado1233@gmail.com',
+        customer_name: shipping.name,
+        customer_email: shipping.email,
+        customer_phone: shipping.phone,
+        customer_address: shipping.address,
+      },
       'puqZNBkJ-_xa9TNMX'
     )
-    console.log('EmailJS success:', result)
   } catch (err) {
     console.error('EmailJS error:', err)
   }
@@ -54,6 +62,7 @@ export default function CartDrawer() {
   } = useStore()
 
   const [isProcessing, setProcessing] = useState(false)
+  const [showShipping, setShowShipping] = useState(false)
 
   const total = getCartTotal()
   const count = getCartCount()
@@ -199,9 +208,7 @@ export default function CartDrawer() {
                 </div>
 
                 <motion.button
-                  onClick={() =>
-                    handleCheckout({ cart, clearCart, closeCart, setProcessing })
-                  }
+                  onClick={() => setShowShipping(true)}
                   disabled={isProcessing}
                   whileHover={isProcessing ? {} : { scale: 1.02 }}
                   whileTap={isProcessing ? {} : { scale: 0.98 }}
@@ -233,5 +240,15 @@ export default function CartDrawer() {
         </>
       )}
     </AnimatePresence>
+
+    {showShipping && (
+      <ShippingModal
+        onClose={() => setShowShipping(false)}
+        onConfirm={(shipping) => {
+          setShowShipping(false)
+          handleCheckout({ cart, shipping, clearCart, closeCart, setProcessing })
+        }}
+      />
+    )}
   )
 }
