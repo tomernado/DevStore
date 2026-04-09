@@ -48,7 +48,7 @@ function StatCard({ icon: Icon, label, value, sub, color }) {
       </div>
       <div className="min-w-0">
         <p className="text-slate-400 text-[11px] font-semibold mb-0.5">{label}</p>
-        <p className="text-slate-900 text-lg font-bold truncate leading-tight">{value}</p>
+        <p className="text-slate-900 text-lg font-semibold truncate leading-tight" style={{ direction: 'ltr', textAlign: 'right' }}>{value}</p>
         {sub && <p className="text-slate-400 text-[11px] mt-0.5">{sub}</p>}
       </div>
     </motion.div>
@@ -304,14 +304,14 @@ export default function Admin() {
           <StatCard
             icon={TrendingUp}
             label='סה"כ הכנסות'
-            value={`₪${totalRevenue.toLocaleString()}`}
+            value={`${totalRevenue.toLocaleString()} ₪`}
             sub={`מ-${orders.length} הזמנות`}
             color="bg-violet-50 text-violet-600"
           />
           <StatCard
             icon={ShoppingBag}
             label="כמות הזמנות"
-            value={orders.length}
+            value={String(orders.length)}
             sub={`${orders.filter(o => o.status === 'בטיפול').length} ממתינות לטיפול`}
             color="bg-blue-50 text-blue-600"
           />
@@ -334,14 +334,14 @@ export default function Admin() {
             <div className="py-14 text-center text-slate-400 text-sm">אין הזמנות עדיין</div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[600px]">
                 <thead>
-                  <tr className="text-right border-b border-slate-100 bg-slate-50/60">
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">מזהה הזמנה</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">תאריך</th>
+                  <tr className="text-right border-b border-slate-100 bg-slate-50">
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-32">מזהה הזמנה</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-36">תאריך</th>
                     <th className="px-6 py-4 text-xs font-semibold text-slate-500">לקוח</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">סכום</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500">סטטוס</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-28">סכום</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-32">סטטוס</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -353,21 +353,25 @@ export default function Admin() {
                       transition={{ delay: i * 0.03 }}
                       className="hover:bg-slate-50 transition-colors"
                     >
-                      <td className="px-6 py-5 text-xs text-slate-400 font-medium">
+                      <td className="px-6 py-5 text-xs text-slate-400 font-medium whitespace-nowrap">
                         #{String(o.id).slice(0, 8)}…
                       </td>
-                      <td className="px-6 py-5 text-slate-600 text-sm whitespace-nowrap">
-                        {new Date(o.created_at).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: '2-digit' })}
-                        <span className="text-slate-400 text-xs mr-1">
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <span className="text-slate-700 text-sm">
+                          {new Date(o.created_at).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                        </span>
+                        <span className="text-slate-400 text-xs block">
                           {new Date(o.created_at).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </td>
-                      <td className="px-6 py-5 text-slate-800 text-sm font-medium max-w-[160px] truncate">
-                        {o.shipping?.name || '—'}
-                        {o.shipping?.phone && <span className="block text-slate-400 text-xs font-normal">{o.shipping.phone}</span>}
+                      <td className="px-6 py-5">
+                        <span className="text-slate-800 text-sm font-medium block">{o.shipping?.name || '—'}</span>
+                        {o.shipping?.phone && <span className="text-slate-400 text-xs">{o.shipping.phone}</span>}
                       </td>
-                      <td className="px-6 py-5 text-slate-900 text-base font-bold">
-                        ₪{(o.total_amount ?? 0).toLocaleString()}
+                      <td className="px-6 py-5 whitespace-nowrap">
+                        <span className="text-slate-900 text-sm font-semibold" style={{ direction: 'ltr', display: 'inline-block' }}>
+                          {(o.total_amount ?? 0).toLocaleString()} ₪
+                        </span>
                       </td>
                       <td className="px-6 py-5">
                         <StatusDropdown
