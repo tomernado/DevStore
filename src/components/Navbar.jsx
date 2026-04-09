@@ -184,12 +184,12 @@ export default function Navbar() {
 
           {/* ── Right actions ───────────────────────────────────── */}
           <div className="flex items-center gap-1">
-            {/* Search toggle — desktop only */}
+            {/* Search toggle */}
             <motion.button
               onClick={searchOpen ? closeSearch : openSearch}
               whileHover={{ scale: 1.06 }}
               whileTap={{ scale: 0.93 }}
-              className={`hidden md:flex relative w-10 h-10 items-center justify-center rounded-xl transition-all duration-150 ${
+              className={`relative w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-150 ${
                 searchOpen
                   ? 'text-violet-600 bg-violet-50'
                   : 'text-slate-500 hover:text-violet-600 hover:bg-violet-50'
@@ -305,6 +305,36 @@ export default function Navbar() {
             </motion.button>
           </div>
         </div>
+
+        {/* ── Mobile search bar ───────────────────────────────── */}
+        <AnimatePresence>
+          {searchOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden overflow-hidden border-t border-violet-100 bg-violet-50/60"
+            >
+              <div className="px-4 py-3 relative">
+                <Search size={15} className="absolute right-7 top-1/2 -translate-y-1/2 text-violet-400 pointer-events-none" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="חפש מוצר..."
+                  autoFocus
+                  className="w-full pr-9 pl-8 py-2.5 rounded-xl border border-violet-200 bg-white text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all"
+                />
+                {searchQuery && (
+                  <button onClick={clearSearch} className="absolute left-7 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors">
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ── Mobile panel ────────────────────────────────────── */}
         <AnimatePresence>
