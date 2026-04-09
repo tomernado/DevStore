@@ -45,10 +45,10 @@ async function handleCheckout({ cart, shipping, user, clearCart, closeCart, setP
     })
     if (error || !data?.url) throw new Error(error?.message ?? 'No URL')
 
-    // Save order to Supabase (always, even if not logged in)
+    // Save order to Supabase
     try {
       await supabase.from('orders').insert([{
-        user_id: user?.id ?? null,
+        user_id: user.id,
         items: cart,
         total_amount: total,
         shipping,
@@ -69,7 +69,7 @@ export default function CartDrawer() {
   const {
     cart, isCartOpen, closeCart,
     removeFromCart, updateQuantity, clearCart,
-    getCartTotal, getCartCount, user,
+    getCartTotal, getCartCount, user, openAuthModal,
   } = useStore()
 
   const [isProcessing, setProcessing] = useState(false)
@@ -220,7 +220,10 @@ export default function CartDrawer() {
                 </div>
 
                 <motion.button
-                  onClick={() => setShowShipping(true)}
+                  onClick={() => {
+                    if (!user) { closeCart(); openAuthModal(); return }
+                    setShowShipping(true)
+                  }}
                   disabled={isProcessing}
                   whileHover={isProcessing ? {} : { scale: 1.02 }}
                   whileTap={isProcessing ? {} : { scale: 0.98 }}
