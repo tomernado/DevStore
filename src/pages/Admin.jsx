@@ -333,8 +333,8 @@ export default function Admin() {
           {orders.length === 0 ? (
             <div className="py-14 text-center text-slate-400 text-sm">אין הזמנות עדיין</div>
           ) : (
-            <div className="overflow-x-auto overflow-y-auto max-h-[300px]">
-              <table className="w-full min-w-[600px]">
+            <div className="overflow-x-auto overflow-y-auto max-h-[300px]" style={{ direction: 'rtl' }}>
+              <table className="w-full min-w-[600px]" style={{ direction: 'rtl' }}>
                 <thead>
                   <tr className="text-right border-b border-slate-100 bg-slate-50 sticky top-0 z-10">
                     <th className="px-6 py-4 text-xs font-semibold text-slate-500 w-32">מזהה הזמנה</th>
