@@ -11,6 +11,7 @@ import ProductDetails from './pages/ProductDetails'
 import Success from './pages/Success'
 import Profile from './pages/Profile'
 import Favorites from './pages/Favorites'
+import Admin from './pages/Admin'
 import { supabase } from './lib/supabase'
 import { useStore } from './store/useStore'
 
@@ -24,6 +25,7 @@ function AnimatedRoutes() {
         <Route path="/success" element={<Success />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/favorites" element={<Favorites />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </AnimatePresence>
   )
