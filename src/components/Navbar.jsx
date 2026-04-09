@@ -183,9 +183,19 @@ export default function Navbar() {
                       transition={{ duration: 0.15 }}
                       className="absolute left-0 top-full mt-2 w-44 bg-white border border-slate-200 rounded-2xl shadow-lg overflow-hidden z-50"
                     >
+                      <Link
+                        to="/profile"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 font-semibold transition-colors"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        הפרופיל שלי
+                      </Link>
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-500 hover:bg-red-50 font-semibold transition-colors"
+                        className="w-full flex items-center gap-2.5 px-4 py-3 text-sm text-red-500 hover:bg-red-50 font-semibold transition-colors border-t border-slate-100"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1" />

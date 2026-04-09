@@ -6,6 +6,18 @@ export const categories = [
 ]
 
 export const products = [
+  {
+    id: 99,
+    category: 'accessories',
+    name: 'Test Product',
+    nameHe: 'מוצר בדיקה',
+    price: 0,
+    badge: 'בדיקה',
+    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
+    description: 'מוצר זה משמש לבדיקת מערכת התשלומים בלבד.',
+    colorVariants: [{ name: 'Test', hex: '#7c3aed' }],
+    specs: [{ label: 'Type', value: 'Test' }],
+  },
   // ─── מקלדות ועכברים ──────────────────────────────────────────────────
   {
     id: 1,

@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase'
 import { useStore } from '../store/useStore'
 import ShippingModal from './ShippingModal'
 
-async function handleCheckout({ cart, shipping, clearCart, closeCart, setProcessing }) {
+async function handleCheckout({ cart, shipping, user, clearCart, closeCart, setProcessing }) {
   setProcessing(true)
 
   const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0)
@@ -44,6 +44,17 @@ async function handleCheckout({ cart, shipping, clearCart, closeCart, setProcess
       },
     })
     if (error || !data?.url) throw new Error(error?.message ?? 'No URL')
+
+    // Save order to Supabase
+    if (user?.id) {
+      await supabase.from('orders').insert([{
+        user_id: user.id,
+        items: cart,
+        total_amount: total,
+        shipping,
+      }]).catch(() => {})
+    }
+
     clearCart()
     closeCart()
     window.location.href = data.url
@@ -58,7 +69,7 @@ export default function CartDrawer() {
   const {
     cart, isCartOpen, closeCart,
     removeFromCart, updateQuantity, clearCart,
-    getCartTotal, getCartCount,
+    getCartTotal, getCartCount, user,
   } = useStore()
 
   const [isProcessing, setProcessing] = useState(false)
@@ -247,7 +258,7 @@ export default function CartDrawer() {
         onClose={() => setShowShipping(false)}
         onConfirm={(shipping) => {
           setShowShipping(false)
-          handleCheckout({ cart, shipping, clearCart, closeCart, setProcessing })
+          handleCheckout({ cart, shipping, user, clearCart, closeCart, setProcessing })
         }}
       />
     )}
