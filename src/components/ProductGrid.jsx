@@ -1,11 +1,21 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { Search, X } from 'lucide-react'
 import { products, categories } from '../data/products'
 import ProductCard from './ProductCard'
 
 export default function ProductGrid({ activeCategory, onCategoryChange }) {
-  const filtered = activeCategory
-    ? products.filter((p) => p.category === activeCategory)
-    : products
+  const [query, setQuery] = useState('')
+
+  const filtered = products.filter((p) => {
+    const matchCat = !activeCategory || p.category === activeCategory
+    const q = query.trim().toLowerCase()
+    const matchQuery = !q ||
+      p.nameHe.toLowerCase().includes(q) ||
+      p.name.toLowerCase().includes(q) ||
+      p.description?.toLowerCase().includes(q)
+    return matchCat && matchQuery
+  })
 
   const activeLabel = activeCategory
     ? categories.find((c) => c.id === activeCategory)?.label
@@ -29,11 +39,31 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           >
             קולקציה
           </p>
-          <div className="flex items-end justify-between flex-wrap gap-4">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-6">
             <h2 className="text-3xl font-extrabold text-slate-900">{activeLabel}</h2>
             <p className="text-slate-400 text-sm" style={{ fontFamily: 'var(--font-mono)' }}>
               {filtered.length} מוצרים
             </p>
+          </div>
+
+          {/* Search bar */}
+          <div className="relative">
+            <Search size={17} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="חפש מוצר..."
+              className="w-full pr-11 pl-10 py-3 rounded-2xl border border-slate-200 bg-white text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all duration-150"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery('')}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
+              >
+                <X size={15} />
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -65,11 +95,22 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
-          {filtered.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
-          ))}
-        </div>
+        {filtered.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-20"
+          >
+            <p className="text-slate-400 text-lg font-semibold">לא נמצאו מוצרים</p>
+            <p className="text-slate-300 text-sm mt-1">נסה מילת חיפוש אחרת</p>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
+            {filtered.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
