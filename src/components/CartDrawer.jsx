@@ -13,7 +13,7 @@ async function handleCheckout({ cart, clearCart, closeCart, navigate, setProcess
 
   try {
     await emailjs.send(
-      'service_05liath',
+      'service_ifdx81g',
       'template_q17npkm',
       { items, total: `₪${total.toLocaleString()}`, to_email: 'tomernado1233@gmail.com' },
       'puqZNBkJ-_xa9TNMX'
