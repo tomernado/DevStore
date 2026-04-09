@@ -1,85 +1,129 @@
 import { create } from 'zustand'
+import { supabase } from '../lib/supabase'
+
+// ── Supabase sync helpers ────────────────────────────────────────────────────
+
+async function dbSaveCart(userId, cart) {
+  if (!userId) return
+  // Delete all then insert current state (simple & reliable)
+  await supabase.from('user_cart').delete().eq('user_id', userId)
+  if (cart.length === 0) return
+  await supabase.from('user_cart').insert(
+    cart.map((item) => ({
+      user_id: userId,
+      product_id: item.id,
+      quantity: item.quantity,
+      product_data: item,
+    }))
+  )
+}
+
+async function dbSaveFavorites(userId, favorites) {
+  if (!userId) return
+  await supabase.from('user_favorites').delete().eq('user_id', userId)
+  if (favorites.length === 0) return
+  await supabase.from('user_favorites').insert(
+    favorites.map((item) => ({
+      user_id: userId,
+      product_id: item.id,
+      product_data: item,
+    }))
+  )
+}
+
+async function dbLoadUserData(userId) {
+  const [{ data: cartRows }, { data: favRows }] = await Promise.all([
+    supabase.from('user_cart').select('product_data, quantity').eq('user_id', userId),
+    supabase.from('user_favorites').select('product_data').eq('user_id', userId),
+  ])
+  const cart = (cartRows ?? []).map((r) => ({ ...r.product_data, quantity: r.quantity }))
+  const favorites = (favRows ?? []).map((r) => r.product_data)
+  return { cart, favorites }
+}
+
+// ── Store ────────────────────────────────────────────────────────────────────
 
 export const useStore = create((set, get) => ({
-  // ─── Cart ───────────────────────────────────────────────────────────────
+  // ─── Cart ──────────────────────────────────────────────────────────────
   cart: [],
   isCartOpen: false,
 
   addToCart: (product) => {
-    const { cart } = get()
+    const { cart, user } = get()
     const existing = cart.find((item) => item.id === product.id)
-    if (existing) {
-      set({
-        cart: cart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        ),
-      })
-    } else {
-      set({ cart: [...cart, { ...product, quantity: 1 }] })
-    }
+    const newCart = existing
+      ? cart.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      : [...cart, { ...product, quantity: 1 }]
+    set({ cart: newCart })
+    dbSaveCart(user?.id, newCart)
   },
 
   removeFromCart: (productId) => {
-    set({ cart: get().cart.filter((item) => item.id !== productId) })
+    const { user } = get()
+    const newCart = get().cart.filter((item) => item.id !== productId)
+    set({ cart: newCart })
+    dbSaveCart(user?.id, newCart)
   },
 
   updateQuantity: (productId, quantity) => {
-    if (quantity < 1) {
-      get().removeFromCart(productId)
-      return
-    }
-    set({
-      cart: get().cart.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
-      ),
-    })
+    if (quantity < 1) { get().removeFromCart(productId); return }
+    const { user } = get()
+    const newCart = get().cart.map((item) =>
+      item.id === productId ? { ...item, quantity } : item
+    )
+    set({ cart: newCart })
+    dbSaveCart(user?.id, newCart)
   },
 
-  clearCart: () => set({ cart: [] }),
+  clearCart: () => {
+    const { user } = get()
+    set({ cart: [] })
+    dbSaveCart(user?.id, [])
+  },
 
   openCart: () => set({ isCartOpen: true }),
   closeCart: () => set({ isCartOpen: false }),
   toggleCart: () => set({ isCartOpen: !get().isCartOpen }),
 
-  getCartTotal: () => {
-    return get().cart.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    )
-  },
+  getCartTotal: () =>
+    get().cart.reduce((total, item) => total + item.price * item.quantity, 0),
 
-  getCartCount: () => {
-    return get().cart.reduce((count, item) => count + item.quantity, 0)
-  },
+  getCartCount: () =>
+    get().cart.reduce((count, item) => count + item.quantity, 0),
 
-  // ─── Favorites ──────────────────────────────────────────────────────────
+  // ─── Favorites ─────────────────────────────────────────────────────────
   favorites: [],
 
   toggleFavorite: (product) => {
-    const { favorites } = get()
+    const { favorites, user } = get()
     const isFav = favorites.find((p) => p.id === product.id)
-    if (isFav) {
-      set({ favorites: favorites.filter((p) => p.id !== product.id) })
-    } else {
-      set({ favorites: [...favorites, product] })
-    }
+    const newFavs = isFav
+      ? favorites.filter((p) => p.id !== product.id)
+      : [...favorites, product]
+    set({ favorites: newFavs })
+    dbSaveFavorites(user?.id, newFavs)
   },
 
-  isFavorite: (productId) => {
-    return !!get().favorites.find((p) => p.id === productId)
-  },
+  isFavorite: (productId) => !!get().favorites.find((p) => p.id === productId),
 
   getFavoritesCount: () => get().favorites.length,
 
-  // ─── Auth Modal ─────────────────────────────────────────────────────────
+  // ─── Auth Modal ────────────────────────────────────────────────────────
   isAuthModalOpen: false,
   openAuthModal: () => set({ isAuthModalOpen: true }),
   closeAuthModal: () => set({ isAuthModalOpen: false }),
 
-  // ─── User ───────────────────────────────────────────────────────────────
+  // ─── User ──────────────────────────────────────────────────────────────
   user: null,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
+
+  setUser: async (user) => {
+    set({ user })
+    // Load persisted cart & favorites from Supabase
+    const { cart, favorites } = await dbLoadUserData(user.id)
+    set({ cart, favorites })
+  },
+
+  clearUser: () => set({ user: null, cart: [], favorites: [] }),
 }))
