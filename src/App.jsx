@@ -44,7 +44,7 @@ function AdminFab() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 16 }}
           transition={{ duration: 0.25 }}
-          className="fixed bottom-6 left-6 z-40"
+          className="hidden md:block fixed bottom-6 left-6 z-40"
         >
           <Link to="/admin">
             <motion.button
