@@ -47,12 +47,14 @@ async function handleCheckout({ cart, shipping, user, clearCart, closeCart, setP
 
     // Save order to Supabase
     if (user?.id) {
-      await supabase.from('orders').insert([{
-        user_id: user.id,
-        items: cart,
-        total_amount: total,
-        shipping,
-      }]).catch(() => {})
+      try {
+        await supabase.from('orders').insert([{
+          user_id: user.id,
+          items: cart,
+          total_amount: total,
+          shipping,
+        }])
+      } catch (_) {}
     }
 
     clearCart()
