@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, Sparkles, ChevronLeft, ChevronRight, Zap, Shield, Truck } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Shield, Truck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const featured = [
@@ -126,26 +126,6 @@ export default function Hero({ onShopNow }) {
 
           {/* ── TEXT COLUMN ─────────────────────────── */}
           <div>
-            {/* Eyebrow CTA pill */}
-            <motion.div variants={staggerV(0)} initial="hidden" animate="visible" className="mb-8">
-              <motion.button
-                onClick={onShopNow}
-                whileHover={{ scale: 1.04, y: -1 }}
-                whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full text-sm font-bold transition-all duration-200"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(99,102,241,0.08) 100%)',
-                  border: '1px solid rgba(124,58,237,0.25)',
-                  color: '#7c3aed',
-                  boxShadow: '0 2px 12px rgba(124,58,237,0.1)',
-                }}
-              >
-                <Sparkles size={13} />
-                <span>גלה את החנות</span>
-                <ArrowLeft size={13} />
-              </motion.button>
-            </motion.div>
-
             {/* Headline */}
             <motion.div variants={staggerV(1)} initial="hidden" animate="visible" className="mb-6">
               <h1
@@ -209,10 +189,10 @@ export default function Hero({ onShopNow }) {
               ))}
             </motion.div>
 
-            {/* CTAs */}
+            {/* CTA */}
             <motion.div
               variants={staggerV(4)} initial="hidden" animate="visible"
-              className="flex flex-col sm:flex-row items-start gap-3 mb-14"
+              className="flex justify-center sm:justify-start mb-14"
             >
               <motion.button
                 onClick={onShopNow}
@@ -222,13 +202,6 @@ export default function Hero({ onShopNow }) {
               >
                 גלה את הקטלוג
                 <ArrowLeft size={17} />
-              </motion.button>
-              <motion.button
-                onClick={onShopNow}
-                whileHover={{ scale: 1.01 }}
-                className="flex items-center gap-2 px-6 py-4 rounded-2xl text-slate-400 hover:text-violet-600 font-semibold text-sm transition-colors duration-150"
-              >
-                צפה בכל המוצרים
               </motion.button>
             </motion.div>
 
@@ -407,6 +380,18 @@ export default function Hero({ onShopNow }) {
                 </motion.button>
               ))}
             </motion.div>
+
+            {/* Subtle link below thumbnails */}
+            <motion.button
+              onClick={onShopNow}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              whileHover={{ scale: 1.02 }}
+              className="block w-full text-center text-xs text-slate-400 hover:text-violet-500 font-medium mt-3 transition-colors duration-150"
+            >
+              צפה בכל המוצרים
+            </motion.button>
           </motion.div>
 
         </div>
