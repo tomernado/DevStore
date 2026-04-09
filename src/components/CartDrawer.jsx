@@ -68,6 +68,7 @@ export default function CartDrawer() {
   const count = getCartCount()
 
   return (
+    <>
     <AnimatePresence>
       {isCartOpen && (
         <>
@@ -250,5 +251,6 @@ export default function CartDrawer() {
         }}
       />
     )}
+    </>
   )
 }
