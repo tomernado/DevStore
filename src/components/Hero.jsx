@@ -134,7 +134,7 @@ export default function Hero({ onShopNow }) {
               >
                 <span className="block">ציוד פרימיום</span>
                 <span className="relative block" style={{ color: '#7c3aed' }}>
-                  שמעוררת השראה
+                  שמעורר השראה
                   {/* Animated wavy underline */}
                   <svg
                     viewBox="0 0 320 14"
@@ -168,32 +168,64 @@ export default function Hero({ onShopNow }) {
               שאתה כותב. כל מוצר ב-DevStore נבחר ביד, נבדק לעומק, ומגיע עם אחריות מלאה.
             </motion.p>
 
-            {/* Trust chips */}
+            {/* Trust chips — staggered floating */}
             <motion.div
               variants={staggerV(3)} initial="hidden" animate="visible"
-              className="flex flex-wrap justify-center lg:justify-start gap-2.5 mb-10"
+              className="flex flex-wrap justify-center lg:justify-start gap-2.5 mb-8"
             >
               {[
-                { label: 'אחריות יבואן רשמי' },
-                { label: 'משלוח תוך 24 שעות' },
-                { label: 'נבחר ע"י מומחים' },
-              ].map(({ label }) => (
-                <div
+                { label: 'אחריות יבואן רשמי', delay: 0 },
+                { label: 'משלוח תוך 24 שעות', delay: 0.15 },
+                { label: 'נבחר ע"י מומחים', delay: 0.3 },
+              ].map(({ label, delay }) => (
+                <motion.div
                   key={label}
-                  className="flex items-center gap-2 pl-4 pr-3 py-2.5 rounded-xl"
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 3 + delay * 4, repeat: Infinity, ease: 'easeInOut', delay }}
+                  className="flex items-center gap-2 pl-4 pr-3 py-2.5 rounded-xl cursor-default select-none"
                   style={{
                     background: 'white',
                     border: '1.5px solid #e8e4f8',
-                    boxShadow: '0 2px 8px rgba(124,58,237,0.06)',
+                    boxShadow: '0 4px 14px rgba(124,58,237,0.09)',
                   }}
                 >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                    style={{ background: '#7c3aed' }}
-                  />
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#7c3aed' }} />
                   <span className="text-slate-700 font-semibold text-sm">{label}</span>
-                </div>
+                </motion.div>
               ))}
+            </motion.div>
+
+            {/* Mobile image strip */}
+            <motion.div
+              variants={staggerV(3)} initial="hidden" animate="visible"
+              className="lg:hidden overflow-hidden mb-8 -mx-4"
+            >
+              <motion.div
+                animate={{ x: ['0%', '-50%'] }}
+                transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+                className="flex gap-3 px-4"
+                style={{ width: 'max-content' }}
+              >
+                {[...featured, ...featured].map((p, i) => (
+                  <div
+                    key={i}
+                    className="flex-shrink-0 relative rounded-2xl overflow-hidden"
+                    style={{
+                      width: 120, height: 84,
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                    }}
+                  >
+                    <img src={p.image} alt={p.nameHe} className="w-full h-full object-cover" />
+                    <div
+                      className="absolute inset-0"
+                      style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 55%)' }}
+                    />
+                    <p className="absolute bottom-1.5 right-2 text-white text-[9px] font-bold leading-tight" style={{ maxWidth: 100, textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                      {p.nameHe}
+                    </p>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
 
             {/* CTA */}
@@ -201,34 +233,41 @@ export default function Hero({ onShopNow }) {
               variants={staggerV(4)} initial="hidden" animate="visible"
               className="flex justify-center lg:justify-start mb-14"
             >
-              <motion.button
-                onClick={onShopNow}
-                whileHover={{ scale: 1.04, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="relative overflow-hidden flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-bold text-base group"
-                style={{
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%)',
-                  boxShadow: '0 8px 32px -6px rgba(124,58,237,0.6), 0 2px 8px rgba(124,58,237,0.25)',
-                }}
-              >
-                {/* animated shine sweep */}
+              <div className="relative">
+                {/* Pulsing ring behind button */}
                 <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
-                  style={{
-                    background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%)',
-                    transition: 'opacity 0.3s',
-                  }}
-                  animate={{ x: ['-100%', '200%'] }}
-                  transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }}
+                  animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0, 0.35] }}
+                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                  className="absolute inset-0 rounded-2xl pointer-events-none"
+                  style={{ background: 'rgba(124,58,237,0.35)', filter: 'blur(2px)' }}
                 />
-                <span style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)' }}>גלה את הקטלוג</span>
-                <motion.span
-                  animate={{ x: [0, -4, 0] }}
-                  transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                <motion.button
+                  onClick={onShopNow}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="relative overflow-hidden flex items-center gap-3 px-9 py-4 rounded-2xl text-white font-bold"
+                  style={{
+                    fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)',
+                    background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%)',
+                    boxShadow: '0 8px 32px -6px rgba(124,58,237,0.65), 0 2px 8px rgba(124,58,237,0.3)',
+                  }}
                 >
-                  <ArrowLeft size={18} />
-                </motion.span>
-              </motion.button>
+                  {/* shine sweep — always animating */}
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.15) 50%, transparent 75%)' }}
+                    animate={{ x: ['-120%', '220%'] }}
+                    transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1.8, ease: 'easeInOut' }}
+                  />
+                  <span>גלה את הקטלוג</span>
+                  <motion.span
+                    animate={{ x: [0, -5, 0] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <ArrowLeft size={18} />
+                  </motion.span>
+                </motion.button>
+              </div>
             </motion.div>
 
             {/* Stats */}
