@@ -54,26 +54,8 @@ function fadeUp(i) {
   }
 }
 
-// 3 extra products for marquee variety
-const marqueeProducts = [
-  ...featured,
-  {
-    id: 9, nameHe: 'Dell UltraSharp 27"', price: 1499,
-    image: 'https://images.unsplash.com/photo-1547119957-637f8679db1e?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 1, nameHe: 'Rode NT-USB', price: 699,
-    image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 14, nameHe: 'Autonomous SmartDesk', price: 2199,
-    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 21, nameHe: 'Apple Magic Keyboard', price: 449,
-    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80',
-  },
-]
+// Marquee uses the same featured list (IDs are real product IDs)
+const marqueeProducts = featured
 
 export default function Hero({ onShopNow }) {
   const [index, setIndex] = useState(0)
@@ -389,7 +371,7 @@ export default function Hero({ onShopNow }) {
         <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, white, transparent)' }} />
         <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, white, transparent)' }} />
 
-        {/* track — force LTR so translateX direction is consistent regardless of page RTL */}
+        {/* track — force LTR; starts at -25% so both left and right edges are always filled */}
         <div
           style={{
             display: 'flex',
@@ -398,7 +380,7 @@ export default function Hero({ onShopNow }) {
             width: 'max-content',
           }}
         >
-          {/* 4 copies ensures seamless loop on any viewport */}
+          {/* 4 copies: at -25%→-50% we always see copies 2+3, edges never empty */}
           {[...marqueeProducts, ...marqueeProducts, ...marqueeProducts, ...marqueeProducts].map((p, i) => (
             <Link
               key={i}
@@ -427,7 +409,7 @@ export default function Hero({ onShopNow }) {
       </motion.div>
 
       <style>{`
-        @keyframes marquee   { from { transform: translateX(0) } to { transform: translateX(-25%) } }
+        @keyframes marquee   { from { transform: translateX(-25%) } to { transform: translateX(-50%) } }
         @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
         @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
         @keyframes floatC    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
