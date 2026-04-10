@@ -105,65 +105,27 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
 
           {/* Category scroll strip */}
           <div className="overflow-x-auto scrollbar-hide px-4">
-            <div className="flex gap-2.5 pb-1" style={{ width: 'max-content' }}>
-              {/* "הכל" tile */}
-              <motion.button
-                onClick={() => onCategoryChange(null)}
-                whileTap={{ scale: 0.94 }}
-                className="flex-shrink-0 flex flex-col items-center justify-center gap-1 rounded-2xl transition-all duration-200"
-                style={{
-                  width: 72, height: 72,
-                  background: !activeCategory
-                    ? 'linear-gradient(135deg, #7c3aed, #6d28d9)'
-                    : 'white',
-                  border: !activeCategory ? 'none' : '1.5px solid #e2e8f0',
-                  boxShadow: !activeCategory
-                    ? '0 4px 16px -4px rgba(124,58,237,0.5)'
-                    : '0 2px 6px rgba(0,0,0,0.05)',
-                }}
-              >
-                <span className="text-2xl leading-none">🛍️</span>
-                <span
-                  className="text-[11px] font-bold leading-tight"
-                  style={{ color: !activeCategory ? 'white' : '#64748b' }}
-                >
-                  הכל
-                </span>
-              </motion.button>
-
-              {categories.map((cat) => {
-                const active = activeCategory === cat.id
+            <div className="flex gap-2 pb-1">
+              {[{ id: null, label: 'הכל' }, ...categories].map((cat) => {
+                const active = cat.id === null ? !activeCategory : activeCategory === cat.id
                 return (
                   <motion.button
-                    key={cat.id}
+                    key={cat.id ?? 'all'}
                     onClick={() => onCategoryChange(cat.id)}
-                    whileTap={{ scale: 0.94 }}
-                    className="flex-shrink-0 flex flex-col items-center justify-center gap-1 rounded-2xl transition-all duration-200"
+                    whileTap={{ scale: 0.95 }}
+                    className="flex-shrink-0 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200"
                     style={{
-                      width: 72, height: 72,
                       background: active
                         ? 'linear-gradient(135deg, #7c3aed, #6d28d9)'
                         : 'white',
+                      color: active ? 'white' : '#64748b',
                       border: active ? 'none' : '1.5px solid #e2e8f0',
                       boxShadow: active
-                        ? '0 4px 16px -4px rgba(124,58,237,0.5)'
-                        : '0 2px 6px rgba(0,0,0,0.05)',
+                        ? '0 4px 16px -4px rgba(124,58,237,0.45)'
+                        : '0 1px 4px rgba(0,0,0,0.05)',
                     }}
                   >
-                    <span className="text-2xl leading-none">{cat.icon}</span>
-                    <span
-                      className="text-[10px] font-bold leading-tight text-center px-1"
-                      style={{
-                        color: active ? 'white' : '#64748b',
-                        maxWidth: 64,
-                        overflow: 'hidden',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                      }}
-                    >
-                      {cat.label}
-                    </span>
+                    {cat.label}
                   </motion.button>
                 )
               })}

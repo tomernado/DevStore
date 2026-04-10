@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Shield, Truck } from 'lucide-react'
+import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const featured = [
@@ -172,38 +172,28 @@ export default function Hero({ onShopNow }) {
             {/* Trust chips */}
             <motion.div
               variants={staggerV(3)} initial="hidden" animate="visible"
-              className="grid grid-cols-3 gap-3 mb-10"
+              className="flex flex-wrap gap-2.5 mb-10"
             >
               {[
-                { icon: Shield, label: 'אחריות יבואן', desc: 'כיסוי מלא' },
-                { icon: Truck, label: 'משלוח מהיר', desc: '24 שעות' },
-                { icon: Zap, label: 'בחירת מומחים', desc: 'נבדק ביד' },
-              ].map(({ icon: Icon, label, desc }, i) => (
-                <motion.div
+                { label: 'אחריות יבואן רשמי' },
+                { label: 'משלוח תוך 24 שעות' },
+                { label: 'נבחר ע"י מומחים' },
+              ].map(({ label }) => (
+                <div
                   key={label}
-                  whileHover={{ y: -2, scale: 1.02 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex flex-col items-center text-center py-3.5 px-2 rounded-2xl relative overflow-hidden"
+                  className="flex items-center gap-2 pl-4 pr-3 py-2.5 rounded-xl"
                   style={{
                     background: 'white',
-                    border: '1.5px solid rgba(124,58,237,0.1)',
-                    boxShadow: '0 4px 16px rgba(124,58,237,0.07), 0 1px 3px rgba(0,0,0,0.04)',
+                    border: '1.5px solid #e8e4f8',
+                    boxShadow: '0 2px 8px rgba(124,58,237,0.06)',
                   }}
                 >
-                  {/* subtle gradient bg */}
-                  <div
-                    className="absolute inset-0 opacity-[0.04] pointer-events-none"
-                    style={{ background: 'radial-gradient(circle at 50% 0%, #7c3aed, transparent 70%)' }}
+                  <span
+                    className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                    style={{ background: '#7c3aed' }}
                   />
-                  <div
-                    className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 flex-shrink-0"
-                    style={{ background: 'rgba(124,58,237,0.09)' }}
-                  >
-                    <Icon size={15} className="text-violet-600" />
-                  </div>
-                  <span className="text-slate-800 font-bold text-[11px] sm:text-xs leading-tight">{label}</span>
-                  <span className="text-slate-400 text-[10px] mt-0.5 font-medium">{desc}</span>
-                </motion.div>
+                  <span className="text-slate-700 font-semibold text-sm">{label}</span>
+                </div>
               ))}
             </motion.div>
 
