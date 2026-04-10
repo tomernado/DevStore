@@ -54,33 +54,23 @@ function fadeUp(i) {
   }
 }
 
-// Marquee — extended list so one full set exceeds the widest desktop viewport
+// Marquee — 20 items so one set (~2600px) exceeds any desktop viewport
 const marqueeProducts = [
   ...featured,
-  {
-    id: 'm1', nameHe: 'מסך עמד מתכוונן',
-    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 'm2', nameHe: 'מקלדת קומפקטית',
-    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 'm3', nameHe: 'רמקול בלוטות׳',
-    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 'm4', nameHe: 'מטען אלחוטי',
-    image: 'https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 'm5', nameHe: 'מצלמת רשת 4K',
-    image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    id: 'm6', nameHe: 'שולחן עמידה',
-    image: 'https://images.unsplash.com/photo-1593642532744-d377ab507dc8?auto=format&fit=crop&w=600&q=80',
-  },
+  { id: 'm1',  image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm2',  image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm3',  image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm4',  image: 'https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm5',  image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm6',  image: 'https://images.unsplash.com/photo-1593642532744-d377ab507dc8?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm7',  image: 'https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm8',  image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm9',  image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm10', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm11', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm12', image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm13', image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=400&q=75' },
+  { id: 'm14', image: 'https://images.unsplash.com/photo-1612838320302-4b3b3996e422?auto=format&fit=crop&w=400&q=75' },
 ]
 
 export default function Hero({ onShopNow }) {
@@ -424,7 +414,7 @@ export default function Hero({ onShopNow }) {
       </motion.div>
 
       <style>{`
-        @keyframes marquee   { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+        @keyframes marquee   { from { transform: translateX(-50%) } to { transform: translateX(0) } }
         @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
         @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
         @keyframes floatC    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
