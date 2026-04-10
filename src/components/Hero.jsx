@@ -129,18 +129,17 @@ export default function Hero({ onShopNow }) {
             {/* Headline */}
             <motion.div variants={staggerV(1)} initial="hidden" animate="visible" className="mb-6">
               <h1
-                className="font-extrabold leading-[1.07] tracking-tight text-slate-900"
+                className="font-extrabold leading-[1.1] tracking-tight text-slate-900"
                 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 7vw, 4.3rem)' }}
               >
-                ציוד פרימיום{' '}
-                <br className="hidden sm:block" />
-                לסביבת עבודה{' '}
-                <span className="relative inline-block" style={{ color: '#7c3aed' }}>
+                <span className="block">ציוד פרימיום</span>
+                <span className="block">לסביבת עבודה</span>
+                <span className="relative block" style={{ color: '#7c3aed' }}>
                   שמעוררת השראה
                   {/* Animated wavy underline */}
                   <svg
                     viewBox="0 0 320 14"
-                    className="absolute -bottom-2 left-0 w-full"
+                    className="absolute -bottom-1 left-0 w-full"
                     preserveAspectRatio="none"
                     aria-hidden="true"
                     fill="none"
