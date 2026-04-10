@@ -383,7 +383,7 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
         </form>
 
         {/* Footer */}
-        <div className="px-7 pb-6 pt-3 flex-shrink-0 border-t border-slate-100">
+        <div className="px-7 pb-6 pt-3 flex-shrink-0 border-t border-slate-100 space-y-2">
           <motion.button
             onClick={handleSubmit}
             disabled={loading || status === 'success'}
@@ -396,6 +396,24 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
           >
             {loading ? 'שומר...' : status === 'success' ? '✓ נשמר' : isEdit ? 'שמור שינויים' : 'הוסף מוצר'}
           </motion.button>
+          {isEdit && (
+            <button
+              type="button"
+              disabled={loading}
+              onClick={async () => {
+                if (!confirm('למחוק את המוצר לצמיתות?')) return
+                setLoading(true)
+                const { error } = await supabase.from('products').delete().eq('id', form.id)
+                setLoading(false)
+                if (error) { console.error(error); return }
+                onSave(); onClose()
+              }}
+              className="w-full py-2.5 rounded-2xl text-red-500 hover:bg-red-50 border border-red-100 hover:border-red-300 font-semibold text-sm transition-all flex items-center justify-center gap-2"
+            >
+              <Trash2 size={14} />
+              מחק מוצר
+            </button>
+          )}
         </div>
       </motion.div>
     </motion.div>
