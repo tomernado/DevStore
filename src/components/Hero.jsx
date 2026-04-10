@@ -376,15 +376,13 @@ export default function Hero({ onShopNow }) {
       </div>
 
       {/* ── MARQUEE STRIP — full width, all screens ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
+      <div
         className="relative w-full overflow-hidden py-3 mt-1"
         style={{
           borderTop: '1px solid rgba(124,58,237,0.08)',
           maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
           WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          animation: 'fadeIn 0.4s ease 0.3s both',
         }}
       >
 
@@ -407,14 +405,15 @@ export default function Hero({ onShopNow }) {
                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
               }}
             >
-              <img src={p.image} alt="" className="w-full h-full object-cover" />
+              <img src={p.image} alt="" className="w-full h-full object-cover" loading="eager" />
             </div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       <style>{`
         @keyframes marquee   { from { transform: translateX(-50%) } to { transform: translateX(0) } }
+        @keyframes fadeIn    { from { opacity: 0 } to { opacity: 1 } }
         @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
         @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
         @keyframes floatC    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
