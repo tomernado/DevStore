@@ -1,22 +1,25 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Hero from '../components/Hero'
 import ProductGrid from '../components/ProductGrid'
 import { useStore } from '../store/useStore'
 
 export default function Home() {
-  const { activeCategory, setActiveCategory } = useStore()
+  const { activeCategory, setActiveCategory, scrollToProductsTrigger } = useStore()
   const productsRef = useRef(null)
 
   const scrollToProducts = () => {
     productsRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  // Scroll when Navbar triggers (category click or search)
+  useEffect(() => {
+    if (scrollToProductsTrigger === 0) return
+    setTimeout(() => productsRef.current?.scrollIntoView({ behavior: 'smooth' }), 80)
+  }, [scrollToProductsTrigger])
+
   const handleCategoryChange = (cat) => {
     setActiveCategory(cat)
-    if (cat) {
-      setTimeout(() => productsRef.current?.scrollIntoView({ behavior: 'smooth' }), 100)
-    }
   }
 
   return (

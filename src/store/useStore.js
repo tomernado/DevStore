@@ -135,4 +135,8 @@ export const useStore = create((set, get) => ({
   // ─── Active Category ───────────────────────────────────────────────────
   activeCategory: null,
   setActiveCategory: (cat) => set({ activeCategory: cat }),
+
+  // ─── Scroll trigger ────────────────────────────────────────────────────
+  scrollToProductsTrigger: 0,
+  triggerScrollToProducts: () => set(s => ({ scrollToProductsTrigger: s.scrollToProductsTrigger + 1 })),
 }))

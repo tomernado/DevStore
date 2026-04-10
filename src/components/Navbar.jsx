@@ -16,7 +16,7 @@ export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const { toggleCart, getCartCount, getFavoritesCount, user, openAuthModal, searchQuery, setSearchQuery, clearSearch, activeCategory, setActiveCategory } = useStore()
+  const { toggleCart, getCartCount, getFavoritesCount, user, openAuthModal, searchQuery, setSearchQuery, clearSearch, activeCategory, setActiveCategory, triggerScrollToProducts } = useStore()
   const cartCount = getCartCount()
   const favCount = getFavoritesCount()
 
@@ -40,7 +40,8 @@ export default function Navbar() {
 
   const openSearch = () => {
     setSearchOpen(true)
-    navigate('/', { state: { category: activeCategory } })
+    if (location.pathname !== '/') navigate('/')
+    triggerScrollToProducts()
   }
 
   const closeSearch = () => {
@@ -72,13 +73,19 @@ export default function Navbar() {
 
   const handleCategoryClick = (catId) => {
     setActiveCategory(catId)
-    navigate('/')
+    if (location.pathname !== '/') {
+      navigate('/')
+    }
+    triggerScrollToProducts()
     setMobileOpen(false)
   }
 
   const handleAll = () => {
     setActiveCategory(null)
-    navigate('/')
+    if (location.pathname !== '/') {
+      navigate('/')
+    }
+    triggerScrollToProducts()
   }
 
   return (

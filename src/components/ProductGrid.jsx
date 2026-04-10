@@ -74,8 +74,8 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           </div>
         </motion.div>
 
-        {/* Category filter pills — horizontally scrollable on mobile */}
-        <div className="flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
+        {/* Category filter pills — mobile only (desktop uses Navbar) */}
+        <div className="md:hidden flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
           <button
             onClick={() => onCategoryChange(null)}
             className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
@@ -101,8 +101,8 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           ))}
         </div>
 
-        {/* Search bar */}
-        <div className="relative mb-8">
+        {/* Search bar — mobile only (desktop uses Navbar) */}
+        <div className="md:hidden relative mb-8">
           <Search size={17} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           <input
             type="text"
