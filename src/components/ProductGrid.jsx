@@ -74,49 +74,101 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           </div>
         </motion.div>
 
-        {/* Category filter pills — mobile only (desktop uses Navbar) */}
-        <div className="md:hidden flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
-          <button
-            onClick={() => onCategoryChange(null)}
-            className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
-              !activeCategory
-                ? 'bg-violet-600 border-violet-600 text-white shadow-violet'
-                : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-800 bg-white'
-            }`}
-          >
-            הכל
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => onCategoryChange(cat.id)}
-              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-150 border ${
-                activeCategory === cat.id
-                  ? 'bg-violet-600 border-violet-600 text-white shadow-violet'
-                  : 'border-slate-200 text-slate-500 hover:border-slate-300 hover:text-slate-800 bg-white'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
+        {/* ── Mobile filter panel ── */}
+        <div className="md:hidden mb-8 -mx-4">
+          {/* Search */}
+          <div className="px-4 mb-4">
+            <div className="relative">
+              <Search size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <input
+                type="text"
+                value={navQuery || localQuery}
+                onChange={(e) => { setLocalQuery(e.target.value); if (navQuery) clearSearch() }}
+                placeholder="חפש מוצר..."
+                className="w-full pr-11 pl-10 py-3.5 rounded-2xl text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none transition-all duration-150"
+                style={{
+                  background: 'white',
+                  border: '1.5px solid #e2e8f0',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                }}
+              />
+              {query && (
+                <button
+                  onClick={() => { setLocalQuery(''); clearSearch() }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+          </div>
 
-        {/* Search bar — mobile only (desktop uses Navbar) */}
-        <div className="md:hidden relative mb-8">
-          <Search size={17} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-          <input
-            type="text"
-            value={navQuery || localQuery}
-            onChange={(e) => { setLocalQuery(e.target.value); if (navQuery) clearSearch() }}
-            placeholder="חפש מוצר..."
-            className="w-full pr-11 pl-10 py-3 rounded-2xl border border-slate-200 bg-white text-slate-900 text-sm font-medium placeholder:text-slate-400 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition-all duration-150"
-          />
-          {query && (
-            <button
-              onClick={() => { setLocalQuery(''); clearSearch() }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
-            ><X size={15} /></button>
-          )}
+          {/* Category scroll strip */}
+          <div className="overflow-x-auto scrollbar-hide px-4">
+            <div className="flex gap-2.5 pb-1" style={{ width: 'max-content' }}>
+              {/* "הכל" tile */}
+              <motion.button
+                onClick={() => onCategoryChange(null)}
+                whileTap={{ scale: 0.94 }}
+                className="flex-shrink-0 flex flex-col items-center justify-center gap-1 rounded-2xl transition-all duration-200"
+                style={{
+                  width: 72, height: 72,
+                  background: !activeCategory
+                    ? 'linear-gradient(135deg, #7c3aed, #6d28d9)'
+                    : 'white',
+                  border: !activeCategory ? 'none' : '1.5px solid #e2e8f0',
+                  boxShadow: !activeCategory
+                    ? '0 4px 16px -4px rgba(124,58,237,0.5)'
+                    : '0 2px 6px rgba(0,0,0,0.05)',
+                }}
+              >
+                <span className="text-2xl leading-none">🛍️</span>
+                <span
+                  className="text-[11px] font-bold leading-tight"
+                  style={{ color: !activeCategory ? 'white' : '#64748b' }}
+                >
+                  הכל
+                </span>
+              </motion.button>
+
+              {categories.map((cat) => {
+                const active = activeCategory === cat.id
+                return (
+                  <motion.button
+                    key={cat.id}
+                    onClick={() => onCategoryChange(cat.id)}
+                    whileTap={{ scale: 0.94 }}
+                    className="flex-shrink-0 flex flex-col items-center justify-center gap-1 rounded-2xl transition-all duration-200"
+                    style={{
+                      width: 72, height: 72,
+                      background: active
+                        ? 'linear-gradient(135deg, #7c3aed, #6d28d9)'
+                        : 'white',
+                      border: active ? 'none' : '1.5px solid #e2e8f0',
+                      boxShadow: active
+                        ? '0 4px 16px -4px rgba(124,58,237,0.5)'
+                        : '0 2px 6px rgba(0,0,0,0.05)',
+                    }}
+                  >
+                    <span className="text-2xl leading-none">{cat.icon}</span>
+                    <span
+                      className="text-[10px] font-bold leading-tight text-center px-1"
+                      style={{
+                        color: active ? 'white' : '#64748b',
+                        maxWidth: 64,
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                      }}
+                    >
+                      {cat.label}
+                    </span>
+                  </motion.button>
+                )
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Grid */}
