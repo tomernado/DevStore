@@ -105,7 +105,7 @@ export default function Hero({ onShopNow }) {
       </div>
 
       {/* Main content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-20 pb-4 lg:pt-16 lg:pb-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16 pb-2 lg:pt-16 lg:pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-20 items-center">
 
           {/* ── TEXT ── */}
@@ -136,7 +136,7 @@ export default function Hero({ onShopNow }) {
             {/* Subtext */}
             <motion.p
               variants={fadeUp(1)} initial="hidden" animate="visible"
-              className="text-slate-500 leading-relaxed mb-9 max-w-md mx-auto lg:mx-0"
+              className="text-slate-500 leading-relaxed mb-5 lg:mb-9 max-w-md mx-auto lg:mx-0"
               style={{ fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)' }}
             >
               כי הכלים שאתה עובד איתם{' '}
@@ -147,7 +147,7 @@ export default function Hero({ onShopNow }) {
             {/* Trust chips — CSS float animation, no Framer conflict */}
             <motion.div
               variants={fadeUp(2)} initial="hidden" animate="visible"
-              className="flex flex-wrap justify-center lg:justify-start gap-2.5 mb-8"
+              className="flex flex-wrap justify-center lg:justify-start gap-2 mb-5 lg:mb-8"
             >
               {[
                 { label: 'אחריות יבואן רשמי', anim: 'floatA' },
@@ -173,7 +173,7 @@ export default function Hero({ onShopNow }) {
             {/* CTA — CSS pulse ring, no Framer conflict */}
             <motion.div
               variants={fadeUp(3)} initial="hidden" animate="visible"
-              className="flex justify-center lg:justify-start mb-10"
+              className="flex justify-center lg:justify-start mb-5 lg:mb-10"
             >
               <div className="relative inline-block">
                 <div
@@ -241,7 +241,7 @@ export default function Hero({ onShopNow }) {
 
               {/* Image */}
               <div
-                className="rounded-3xl overflow-hidden aspect-[16/9] lg:aspect-[4/3] bg-slate-100 relative"
+                className="rounded-3xl overflow-hidden aspect-[16/9] lg:aspect-[4/3] max-h-44 sm:max-h-none bg-slate-100 relative"
                 style={{ boxShadow: '0 24px 64px -16px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)' }}
               >
                 <AnimatePresence mode="wait" custom={dir}>
@@ -325,7 +325,7 @@ export default function Hero({ onShopNow }) {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.5 }}
-              className="flex justify-center gap-2 mt-5 lg:mt-12"
+              className="flex justify-center gap-1.5 mt-3 lg:mt-12"
             >
               {featured.map((p, i) => (
                 <motion.button
@@ -333,7 +333,7 @@ export default function Hero({ onShopNow }) {
                   onClick={() => goTo(i)}
                   whileHover={{ scale: 1.12, y: -3 }}
                   whileTap={{ scale: 0.94 }}
-                  className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden flex-shrink-0"
                   style={{
                     border: `2.5px solid ${i === index ? current.color : 'rgba(0,0,0,0.07)'}`,
                     opacity: i === index ? 1 : 0.5,
@@ -364,52 +364,40 @@ export default function Hero({ onShopNow }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8 }}
-        className="relative w-full overflow-hidden py-4 mt-1"
+        className="relative w-full overflow-hidden py-3 mt-1"
         style={{ borderTop: '1px solid rgba(124,58,237,0.08)' }}
       >
         {/* fade edges */}
         <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, white, transparent)' }} />
         <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, white, transparent)' }} />
 
-        {/* track — force LTR; starts at -25% so both left and right edges are always filled */}
+        {/* track — force LTR; 2 copies + translateX(0→-50%) = seamless infinite loop */}
         <div
           style={{
             display: 'flex',
             direction: 'ltr',
-            animation: 'marquee 30s linear infinite',
+            animation: 'marquee 28s linear infinite',
             width: 'max-content',
           }}
         >
-          {/* 4 copies: at -25%→-50% we always see copies 2+3, edges never empty */}
-          {[...marqueeProducts, ...marqueeProducts, ...marqueeProducts, ...marqueeProducts].map((p, i) => (
-            <Link
+          {[...marqueeProducts, ...marqueeProducts].map((p, i) => (
+            <div
               key={i}
-              to={`/product/${p.id}`}
-              className="flex-shrink-0 relative rounded-2xl overflow-hidden"
+              className="flex-shrink-0 relative rounded-xl overflow-hidden"
               style={{
-                width: 140, height: 96,
-                margin: '0 6px',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                transition: 'transform 0.2s, box-shadow 0.2s',
+                width: 120, height: 80,
+                margin: '0 5px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.18)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)' }}
             >
-              <img src={p.image} alt={p.nameHe} className="w-full h-full object-cover" />
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 60%)' }} />
-              <p
-                className="absolute bottom-2 right-2 left-2 text-white font-bold leading-tight"
-                style={{ fontSize: 10, textShadow: '0 1px 3px rgba(0,0,0,0.7)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
-              >
-                {p.nameHe}
-              </p>
-            </Link>
+              <img src={p.image} alt="" className="w-full h-full object-cover" />
+            </div>
           ))}
         </div>
       </motion.div>
 
       <style>{`
-        @keyframes marquee   { from { transform: translateX(-25%) } to { transform: translateX(-50%) } }
+        @keyframes marquee   { from { transform: translateX(0) } to { transform: translateX(-50%) } }
         @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
         @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
         @keyframes floatC    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
