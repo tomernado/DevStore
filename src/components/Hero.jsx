@@ -54,23 +54,24 @@ function fadeUp(i) {
   }
 }
 
-// Marquee — 20 items so one set (~2600px) exceeds any desktop viewport
-const marqueeProducts = [
-  ...featured,
-  { id: 'm1',  image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm2',  image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm3',  image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm4',  image: 'https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm5',  image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm6',  image: 'https://images.unsplash.com/photo-1593642532744-d377ab507dc8?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm7',  image: 'https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm8',  image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm9',  image: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm10', image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm11', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm12', image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm13', image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=400&q=75' },
-  { id: 'm14', image: 'https://images.unsplash.com/photo-1612838320302-4b3b3996e422?auto=format&fit=crop&w=400&q=75' },
+// Marquee — 16 verified tech/desk images; 4 copies used → translateX(0→-50%) seamless
+const marqueeImages = [
+  featured[0].image, // keychron keyboard
+  featured[1].image, // herman miller chair
+  featured[2].image, // LG monitor
+  featured[3].image, // jabra headphones
+  featured[4].image, // MX Master mouse
+  featured[5].image, // elgato key light
+  'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=400&q=80', // laptop desk setup
+  'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=400&q=80', // white keyboard
+  'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=400&q=80', // headphones flat
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80', // circuit board
+  'https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=400&q=80', // laptop open
+  'https://images.unsplash.com/photo-1593642532744-d377ab507dc8?auto=format&fit=crop&w=400&q=80', // laptop side
+  'https://images.unsplash.com/photo-1612838320302-4b3b3996e422?auto=format&fit=crop&w=400&q=80', // monitor glow
+  'https://images.unsplash.com/photo-1545127398-14699f92334b?auto=format&fit=crop&w=400&q=80', // mechanical keyboard closeup
+  'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=400&q=80', // tech flatlay
+  'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=400&q=80', // sony headphones
 ]
 
 export default function Hero({ onShopNow }) {
@@ -386,33 +387,35 @@ export default function Hero({ onShopNow }) {
         }}
       >
 
-        {/* track — force LTR; 2 copies + translateX(0→-50%) = seamless infinite loop */}
+        {/* 4 copies: translateX(0→-50%) moves exactly 2 sets → seamless loop, starts from position 0 */}
         <div
           style={{
             display: 'flex',
             direction: 'ltr',
-            animation: 'marquee 28s linear infinite',
+            animation: 'marquee 40s linear infinite',
             width: 'max-content',
           }}
         >
-          {[...marqueeProducts, ...marqueeProducts].map((p, i) => (
+          {[...marqueeImages, ...marqueeImages, ...marqueeImages, ...marqueeImages].map((src, i) => (
             <div
               key={i}
-              className="flex-shrink-0 relative rounded-xl overflow-hidden"
+              className="flex-shrink-0 rounded-xl overflow-hidden"
               style={{
-                width: 120, height: 80,
-                margin: '0 5px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                width: 150, height: 100,
+                margin: '0 6px',
+                background: '#e2e8f0',
+                boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
+                flexShrink: 0,
               }}
             >
-              <img src={p.image} alt="" className="w-full h-full object-cover" loading="eager" />
+              <img src={src} alt="" className="w-full h-full object-cover" loading="eager" decoding="async" />
             </div>
           ))}
         </div>
       </div>
 
       <style>{`
-        @keyframes marquee   { from { transform: translateX(-50%) } to { transform: translateX(0) } }
+        @keyframes marquee   { from { transform: translateX(0) } to { transform: translateX(-50%) } }
         @keyframes fadeIn    { from { opacity: 0 } to { opacity: 1 } }
         @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
         @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
