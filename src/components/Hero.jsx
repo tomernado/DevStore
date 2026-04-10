@@ -161,30 +161,49 @@ export default function Hero({ onShopNow }) {
             {/* Subtext */}
             <motion.p
               variants={staggerV(2)} initial="hidden" animate="visible"
-              className="text-slate-500 text-base leading-relaxed mb-9 max-w-md"
+              className="text-slate-500 leading-relaxed mb-9 max-w-md"
+              style={{ fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)' }}
             >
-              כי הכלים שאתה עובד איתם חשובים לא פחות מהקוד שאתה כותב. כל מוצר ב-DevStore נבחר ביד,
-              נבדק לעומק, ומגיע עם אחריות מלאה.
+              כי הכלים שאתה עובד איתם{' '}
+              <span className="text-slate-800 font-semibold">חשובים לא פחות מהקוד</span>{' '}
+              שאתה כותב. כל מוצר ב-DevStore נבחר ביד, נבדק לעומק, ומגיע עם אחריות מלאה.
             </motion.p>
 
-            {/* Trust chips — fixed 3-column row on all screen sizes */}
+            {/* Trust chips */}
             <motion.div
               variants={staggerV(3)} initial="hidden" animate="visible"
-              className="grid grid-cols-3 gap-2 mb-10"
+              className="grid grid-cols-3 gap-3 mb-10"
             >
               {[
-                { icon: Shield, label: 'אחריות יבואן' },
-                { icon: Truck, label: 'משלוח 24h' },
-                { icon: Zap, label: 'בחירת מומחים' },
-              ].map(({ icon: Icon, label }) => (
-                <div
+                { icon: Shield, label: 'אחריות יבואן', desc: 'כיסוי מלא' },
+                { icon: Truck, label: 'משלוח מהיר', desc: '24 שעות' },
+                { icon: Zap, label: 'בחירת מומחים', desc: 'נבדק ביד' },
+              ].map(({ icon: Icon, label, desc }, i) => (
+                <motion.div
                   key={label}
-                  className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-100 text-center"
-                  style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+                  whileHover={{ y: -2, scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-center text-center py-3.5 px-2 rounded-2xl relative overflow-hidden"
+                  style={{
+                    background: 'white',
+                    border: '1.5px solid rgba(124,58,237,0.1)',
+                    boxShadow: '0 4px 16px rgba(124,58,237,0.07), 0 1px 3px rgba(0,0,0,0.04)',
+                  }}
                 >
-                  <Icon size={12} className="text-violet-500 flex-shrink-0" />
-                  <span>{label}</span>
-                </div>
+                  {/* subtle gradient bg */}
+                  <div
+                    className="absolute inset-0 opacity-[0.04] pointer-events-none"
+                    style={{ background: 'radial-gradient(circle at 50% 0%, #7c3aed, transparent 70%)' }}
+                  />
+                  <div
+                    className="w-8 h-8 rounded-xl flex items-center justify-center mb-2 flex-shrink-0"
+                    style={{ background: 'rgba(124,58,237,0.09)' }}
+                  >
+                    <Icon size={15} className="text-violet-600" />
+                  </div>
+                  <span className="text-slate-800 font-bold text-[11px] sm:text-xs leading-tight">{label}</span>
+                  <span className="text-slate-400 text-[10px] mt-0.5 font-medium">{desc}</span>
+                </motion.div>
               ))}
             </motion.div>
 
@@ -195,12 +214,31 @@ export default function Hero({ onShopNow }) {
             >
               <motion.button
                 onClick={onShopNow}
-                whileHover={{ scale: 1.03, y: -1 }}
+                whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-base transition-colors duration-150 shadow-violet"
+                className="relative overflow-hidden flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-bold text-base group"
+                style={{
+                  background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%)',
+                  boxShadow: '0 8px 32px -6px rgba(124,58,237,0.6), 0 2px 8px rgba(124,58,237,0.25)',
+                }}
               >
-                גלה את הקטלוג
-                <ArrowLeft size={17} />
+                {/* animated shine sweep */}
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%)',
+                    transition: 'opacity 0.3s',
+                  }}
+                  animate={{ x: ['-100%', '200%'] }}
+                  transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 1.5, ease: 'easeInOut' }}
+                />
+                <span style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)' }}>גלה את הקטלוג</span>
+                <motion.span
+                  animate={{ x: [0, -4, 0] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ArrowLeft size={18} />
+                </motion.span>
               </motion.button>
             </motion.div>
 
