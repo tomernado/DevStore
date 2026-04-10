@@ -105,8 +105,8 @@ export default function Hero({ onShopNow }) {
       </div>
 
       {/* Main content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-6 lg:pt-16 lg:pb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-20 pb-4 lg:pt-16 lg:pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-20 items-center">
 
           {/* ── TEXT ── */}
           <div className="text-center lg:text-right">
@@ -241,7 +241,7 @@ export default function Hero({ onShopNow }) {
 
               {/* Image */}
               <div
-                className="rounded-3xl overflow-hidden aspect-[4/3] bg-slate-100 relative"
+                className="rounded-3xl overflow-hidden aspect-[16/9] lg:aspect-[4/3] bg-slate-100 relative"
                 style={{ boxShadow: '0 24px 64px -16px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)' }}
               >
                 <AnimatePresence mode="wait" custom={dir}>
@@ -325,7 +325,7 @@ export default function Hero({ onShopNow }) {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.5 }}
-              className="flex justify-center gap-2 mt-12"
+              className="flex justify-center gap-2 mt-5 lg:mt-12"
             >
               {featured.map((p, i) => (
                 <motion.button
@@ -351,7 +351,7 @@ export default function Hero({ onShopNow }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.65 }}
-              className="block w-full text-center text-xs text-slate-400 hover:text-violet-500 font-medium mt-3 transition-colors"
+              className="hidden lg:block w-full text-center text-xs text-slate-400 hover:text-violet-500 font-medium mt-3 transition-colors"
             >
               צפה בכל המוצרים
             </motion.button>
@@ -364,7 +364,7 @@ export default function Hero({ onShopNow }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8 }}
-        className="relative w-full overflow-hidden py-5 mt-2"
+        className="relative w-full overflow-hidden py-4 mt-1"
         style={{ borderTop: '1px solid rgba(124,58,237,0.08)' }}
       >
         {/* fade edges */}
