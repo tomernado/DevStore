@@ -5,32 +5,32 @@ import { Link } from 'react-router-dom'
 
 const featured = [
   {
-    id: 1, emoji: '⌨️', name: 'Keychron Q1 Pro', nameHe: 'מקלדת מכנית Hall Effect', price: 549,
+    id: 1, name: 'Keychron Q1 Pro', nameHe: 'מקלדת מכנית Hall Effect', price: 549,
     image: 'https://images.unsplash.com/photo-1553481187-be93c21490a9?auto=format&fit=crop&w=1000&q=85',
     tag: 'הנמכר ביותר', color: '#7c3aed',
   },
   {
-    id: 14, emoji: '🪑', name: 'Herman Miller Aeron', nameHe: 'כיסא ארגונומי אייקוני', price: 3999,
+    id: 14, name: 'Herman Miller Aeron', nameHe: 'כיסא ארגונומי אייקוני', price: 3999,
     image: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?auto=format&fit=crop&w=1000&q=85',
     tag: 'השקעה לחיים', color: '#0d9488',
   },
   {
-    id: 9, emoji: '🖥️', name: 'LG UltraFine 5K', nameHe: 'מסך 5K Thunderbolt 4', price: 2149,
+    id: 9, name: 'LG UltraFine 5K', nameHe: 'מסך 5K Thunderbolt 4', price: 2149,
     image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1000&q=85',
     tag: 'פרמיום', color: '#1d4ed8',
   },
   {
-    id: 21, emoji: '🎧', name: 'Jabra Evolve2 85', nameHe: 'אוזניות ANC מקצועיות', price: 1149,
+    id: 21, name: 'Jabra Evolve2 85', nameHe: 'אוזניות ANC מקצועיות', price: 1149,
     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85',
     tag: 'פוקוס מקסימלי', color: '#db2777',
   },
   {
-    id: 3, emoji: '🖱️', name: 'Logitech MX Master 3S', nameHe: 'עכבר אלחוטי מקצועי', price: 399,
+    id: 3, name: 'Logitech MX Master 3S', nameHe: 'עכבר אלחוטי מקצועי', price: 399,
     image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=1000&q=85',
     tag: 'חדש בחנות', color: '#ea580c',
   },
   {
-    id: 7, emoji: '💡', name: 'Elgato Key Light', nameHe: 'תאורת LED מקצועית', price: 449,
+    id: 7, name: 'Elgato Key Light', nameHe: 'תאורת LED מקצועית', price: 449,
     image: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1000&q=85',
     tag: 'לסטרימרים', color: '#d97706',
   },
@@ -39,20 +39,41 @@ const featured = [
 const INTERVAL = 3500
 
 const slideV = {
-  enter: (d) => ({ opacity: 0, x: d > 0 ? 70 : -70, scale: 0.95 }),
-  center: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
-  exit: (d) => ({ opacity: 0, x: d > 0 ? -70 : 70, scale: 0.95, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }),
+  enter: (d) => ({ opacity: 0, x: d > 0 ? 60 : -60, scale: 0.96 }),
+  center: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+  exit: (d) => ({ opacity: 0, x: d > 0 ? -60 : 60, scale: 0.96, transition: { duration: 0.38, ease: [0.22, 1, 0.36, 1] } }),
 }
 
-function staggerV(i) {
+function fadeUp(i) {
   return {
-    hidden: { opacity: 0, y: 24 },
+    hidden: { opacity: 0, y: 22 },
     visible: {
       opacity: 1, y: 0,
-      transition: { duration: 0.6, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.55, delay: 0.08 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
     },
   }
 }
+
+// 3 extra products for marquee variety
+const marqueeProducts = [
+  ...featured,
+  {
+    id: 9, nameHe: 'Dell UltraSharp 27"', price: 1499,
+    image: 'https://images.unsplash.com/photo-1547119957-637f8679db1e?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 1, nameHe: 'Rode NT-USB', price: 699,
+    image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 14, nameHe: 'Autonomous SmartDesk', price: 2199,
+    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 21, nameHe: 'Apple Magic Keyboard', price: 449,
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80',
+  },
+]
 
 export default function Hero({ onShopNow }) {
   const [index, setIndex] = useState(0)
@@ -72,62 +93,44 @@ export default function Hero({ onShopNow }) {
 
   return (
     <section
-      className="relative overflow-visible"
+      className="relative overflow-hidden"
       style={{
         minHeight: '92vh',
         display: 'flex',
-        alignItems: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
         background: `
-          radial-gradient(ellipse 90% 70% at top right, rgba(167,139,250,0.14) 0%, transparent 55%),
-          radial-gradient(ellipse 70% 60% at bottom left, rgba(99,102,241,0.1) 0%, transparent 55%),
-          radial-gradient(ellipse 55% 55% at 65% 10%, rgba(236,72,153,0.06) 0%, transparent 50%),
+          radial-gradient(ellipse 90% 70% at top right, rgba(167,139,250,0.13) 0%, transparent 55%),
+          radial-gradient(ellipse 70% 60% at bottom left, rgba(99,102,241,0.09) 0%, transparent 55%),
           #ffffff
         `,
       }}
     >
-      {/* Background effects — clipped so they don't overflow the page */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Giant faded wordmark */}
+      {/* BG orbs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute hidden lg:block select-none"
           style={{
             top: '50%', left: '-1%', transform: 'translateY(-50%)',
             fontSize: '21rem', fontFamily: 'var(--font-display)', fontWeight: 800,
-            color: '#7c3aed', opacity: 0.027, lineHeight: 1,
-            letterSpacing: '-0.04em', whiteSpace: 'nowrap',
+            color: '#7c3aed', opacity: 0.025, lineHeight: 1, letterSpacing: '-0.04em', whiteSpace: 'nowrap',
           }}
-        >
-          DEV
-        </div>
-
-        {/* Top accent line */}
-        <div
-          className="absolute top-0 left-0 right-0 h-px"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.45) 50%, transparent)' }}
-        />
-
-        {/* Subtle animated orbs */}
-        <motion.div
-          animate={{ scale: [1, 1.08, 1], opacity: [0.07, 0.12, 0.07] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute rounded-full blur-3xl"
-          style={{ width: 480, height: 480, top: '-10%', right: '-8%', background: '#7c3aed' }}
-        />
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.05, 0.09, 0.05] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          className="absolute rounded-full blur-3xl"
-          style={{ width: 320, height: 320, bottom: '0%', left: '-5%', background: '#6366f1' }}
-        />
+        >DEV</div>
+        <div className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(124,58,237,0.4) 50%, transparent)' }} />
+        <div className="absolute rounded-full blur-3xl" style={{ animation: 'orbA 9s ease-in-out infinite', width: 460, height: 460, top: '-10%', right: '-8%', background: '#7c3aed', opacity: 0.08 }} />
+        <div className="absolute rounded-full blur-3xl" style={{ animation: 'orbB 11s ease-in-out infinite', width: 300, height: 300, bottom: '0%', left: '-5%', background: '#6366f1', opacity: 0.07 }} />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-12 lg:pt-16 lg:pb-12">
+      {/* Main content */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-6 lg:pt-16 lg:pb-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
 
-          {/* ── TEXT COLUMN ─────────────────────────── */}
+          {/* ── TEXT ── */}
           <div className="text-center lg:text-right">
+
             {/* Headline */}
-            <motion.div variants={staggerV(1)} initial="hidden" animate="visible" className="mb-6">
+            <motion.div variants={fadeUp(0)} initial="hidden" animate="visible" className="mb-6">
               <h1
                 className="font-extrabold leading-[1.1] tracking-tight text-slate-900"
                 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 7vw, 4.3rem)' }}
@@ -135,22 +138,13 @@ export default function Hero({ onShopNow }) {
                 <span className="block">ציוד פרימיום</span>
                 <span className="relative block" style={{ color: '#7c3aed' }}>
                   שמעורר השראה
-                  {/* Animated wavy underline */}
-                  <svg
-                    viewBox="0 0 320 14"
-                    className="absolute -bottom-1 left-0 w-full"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                    fill="none"
-                  >
+                  <svg viewBox="0 0 320 14" className="absolute -bottom-1 left-0 w-full" preserveAspectRatio="none" aria-hidden fill="none">
                     <motion.path
                       d="M2 9 Q40 3 80 9 Q120 15 160 9 Q200 3 240 9 Q280 15 318 9"
-                      stroke="#7c3aed"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
+                      stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round"
                       initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 0.55 }}
-                      transition={{ duration: 0.9, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
+                      animate={{ pathLength: 1, opacity: 0.5 }}
+                      transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     />
                   </svg>
                 </span>
@@ -159,7 +153,7 @@ export default function Hero({ onShopNow }) {
 
             {/* Subtext */}
             <motion.p
-              variants={staggerV(2)} initial="hidden" animate="visible"
+              variants={fadeUp(1)} initial="hidden" animate="visible"
               className="text-slate-500 leading-relaxed mb-9 max-w-md mx-auto lg:mx-0"
               style={{ fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)' }}
             >
@@ -168,103 +162,67 @@ export default function Hero({ onShopNow }) {
               שאתה כותב. כל מוצר ב-DevStore נבחר ביד, נבדק לעומק, ומגיע עם אחריות מלאה.
             </motion.p>
 
-            {/* Trust chips — staggered floating */}
+            {/* Trust chips — CSS float animation, no Framer conflict */}
             <motion.div
-              variants={staggerV(3)} initial="hidden" animate="visible"
+              variants={fadeUp(2)} initial="hidden" animate="visible"
               className="flex flex-wrap justify-center lg:justify-start gap-2.5 mb-8"
             >
               {[
-                { label: 'אחריות יבואן רשמי', delay: 0 },
-                { label: 'משלוח תוך 24 שעות', delay: 0.15 },
-                { label: 'נבחר ע"י מומחים', delay: 0.3 },
-              ].map(({ label, delay }) => (
-                <motion.div
+                { label: 'אחריות יבואן רשמי', anim: 'floatA' },
+                { label: 'משלוח תוך 24 שעות', anim: 'floatB' },
+                { label: 'נבחר ע"י מומחים', anim: 'floatC' },
+              ].map(({ label, anim }) => (
+                <div
                   key={label}
-                  animate={{ y: [0, -4, 0] }}
-                  transition={{ duration: 3 + delay * 4, repeat: Infinity, ease: 'easeInOut', delay }}
                   className="flex items-center gap-2 pl-4 pr-3 py-2.5 rounded-xl cursor-default select-none"
                   style={{
                     background: 'white',
-                    border: '1.5px solid #e8e4f8',
-                    boxShadow: '0 4px 14px rgba(124,58,237,0.09)',
+                    border: '1.5px solid #ede9fa',
+                    boxShadow: '0 4px 14px rgba(124,58,237,0.08)',
+                    animation: `${anim} 3.5s ease-in-out infinite`,
                   }}
                 >
                   <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#7c3aed' }} />
                   <span className="text-slate-700 font-semibold text-sm">{label}</span>
-                </motion.div>
+                </div>
               ))}
             </motion.div>
 
-            {/* Mobile image strip — CSS marquee (truly infinite) */}
+            {/* CTA — CSS pulse ring, no Framer conflict */}
             <motion.div
-              variants={staggerV(3)} initial="hidden" animate="visible"
-              className="lg:hidden overflow-hidden mb-8 -mx-4"
+              variants={fadeUp(3)} initial="hidden" animate="visible"
+              className="flex justify-center lg:justify-start mb-10"
             >
-              <div className="flex" style={{ animation: 'marquee 28s linear infinite' }}>
-                {/* 4 copies so the seam is invisible on any screen width */}
-                {[...featured, ...featured, ...featured, ...featured].map((p, i) => (
-                  <Link
-                    key={i}
-                    to={`/product/${p.id}`}
-                    className="flex-shrink-0 relative rounded-2xl overflow-hidden mx-1.5"
-                    style={{ width: 118, height: 84, boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}
-                  >
-                    <img src={p.image} alt={p.nameHe} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)' }} />
-                    <p className="absolute bottom-1.5 right-2 left-2 text-white font-bold leading-tight"
-                      style={{ fontSize: 9, textShadow: '0 1px 3px rgba(0,0,0,0.6)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                      {p.nameHe}
-                    </p>
-                  </Link>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* CTA */}
-            <motion.div
-              variants={staggerV(4)} initial="hidden" animate="visible"
-              className="flex justify-center lg:justify-start mb-14"
-            >
-              <div className="relative">
-                {/* Pulsing ring behind button */}
-                <motion.div
-                  animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0, 0.35] }}
-                  transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+              <div className="relative inline-block">
+                <div
                   className="absolute inset-0 rounded-2xl pointer-events-none"
-                  style={{ background: 'rgba(124,58,237,0.35)', filter: 'blur(2px)' }}
+                  style={{ background: 'rgba(124,58,237,0.4)', animation: 'pulseRing 2.4s ease-in-out infinite' }}
                 />
-                <motion.button
+                <button
                   onClick={onShopNow}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
                   className="relative overflow-hidden flex items-center gap-3 px-9 py-4 rounded-2xl text-white font-bold"
                   style={{
                     fontSize: 'clamp(0.95rem, 2.5vw, 1.05rem)',
                     background: 'linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%)',
                     boxShadow: '0 8px 32px -6px rgba(124,58,237,0.65), 0 2px 8px rgba(124,58,237,0.3)',
+                    transition: 'transform 0.15s, box-shadow 0.15s',
                   }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05) translateY(-2px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = '' }}
                 >
-                  {/* shine sweep — always animating */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{ background: 'linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.15) 50%, transparent 75%)' }}
-                    animate={{ x: ['-120%', '220%'] }}
-                    transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1.8, ease: 'easeInOut' }}
-                  />
+                  {/* CSS shine sweep */}
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, transparent 25%, rgba(255,255,255,0.15) 50%, transparent 75%)', animation: 'shine 3.5s ease-in-out infinite' }} />
                   <span>גלה את הקטלוג</span>
-                  <motion.span
-                    animate={{ x: [0, -5, 0] }}
-                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                  >
+                  <span style={{ display: 'inline-block', animation: 'arrowPulse 1.5s ease-in-out infinite' }}>
                     <ArrowLeft size={18} />
-                  </motion.span>
-                </motion.button>
+                  </span>
+                </button>
               </div>
             </motion.div>
 
             {/* Stats */}
             <motion.div
-              variants={staggerV(5)} initial="hidden" animate="visible"
+              variants={fadeUp(4)} initial="hidden" animate="visible"
               className="hidden sm:grid grid-cols-3 gap-6 pt-8 border-t border-slate-100 text-center lg:text-right"
             >
               {[
@@ -273,38 +231,33 @@ export default function Hero({ onShopNow }) {
                 { value: '24h', label: 'משלוח מהיר' },
               ].map((s) => (
                 <div key={s.label}>
-                  <div className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-mono)' }}>
-                    {s.value}
-                  </div>
+                  <div className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-mono)' }}>{s.value}</div>
                   <div className="text-xs text-slate-400 mt-1">{s.label}</div>
                 </div>
               ))}
             </motion.div>
           </div>
 
-          {/* ── PRODUCT VISUAL ─────────────────────── */}
+          {/* ── CAROUSEL ── */}
           <motion.div
             initial={{ opacity: 0, x: -36 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.75, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="relative order-first lg:order-last"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+            <div
               className="relative mx-4 lg:mx-0"
+              style={{ animation: 'floatCard 7s ease-in-out infinite' }}
             >
-              {/* Color glow behind image — transitions with product */}
-              <motion.div
-                animate={{ opacity: [0.18, 0.26, 0.18] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+              {/* Glow */}
+              <div
                 className="absolute inset-6 rounded-3xl blur-3xl pointer-events-none -z-10"
-                style={{ background: current.color, transition: 'background 0.7s ease' }}
+                style={{ background: current.color, opacity: 0.22, transition: 'background 0.7s ease' }}
               />
 
-              {/* Main image */}
+              {/* Image */}
               <div
                 className="rounded-3xl overflow-hidden aspect-[4/3] bg-slate-100 relative"
                 style={{ boxShadow: '0 24px 64px -16px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04)' }}
@@ -322,101 +275,74 @@ export default function Hero({ onShopNow }) {
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                 </AnimatePresence>
+                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 45%)' }} />
 
-                {/* Subtle vignette at bottom */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 45%)' }}
-                />
-
-                {/* Prev / Next */}
+                {/* Prev/Next */}
                 <div className="absolute inset-0 flex items-center justify-between px-3 opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={goPrev}
-                    className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-md text-slate-700 pointer-events-auto"
-                  >
+                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={goPrev}
+                    className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-md text-slate-700 pointer-events-auto">
                     <ChevronRight size={18} />
                   </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={goNext}
-                    className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-md text-slate-700 pointer-events-auto"
-                  >
+                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={goNext}
+                    className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-md text-slate-700 pointer-events-auto">
                     <ChevronLeft size={18} />
                   </motion.button>
                 </div>
 
-                {/* Dot indicators */}
+                {/* Dots */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
                   {featured.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => goTo(i)}
-                      className="transition-all duration-300 rounded-full"
-                      style={{
-                        width: i === index ? '18px' : '6px',
-                        height: '6px',
-                        background: i === index ? '#ffffff' : 'rgba(255,255,255,0.45)',
-                      }}
-                    />
+                    <button key={i} onClick={() => goTo(i)} className="transition-all duration-300 rounded-full"
+                      style={{ width: i === index ? 18 : 6, height: 6, background: i === index ? '#fff' : 'rgba(255,255,255,0.45)' }} />
                   ))}
                 </div>
               </div>
 
-              {/* Product badge — top */}
+              {/* Top badge */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`badge-${current.id}`}
                   initial={{ opacity: 0, y: 8, scale: 0.94 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.94 }}
-                  transition={{ duration: 0.38 }}
+                  transition={{ duration: 0.35 }}
                   className="absolute top-3 right-3 lg:-top-5 lg:-right-5 bg-white rounded-2xl border border-slate-100 px-3 py-2.5 lg:px-4 lg:py-3 flex items-center gap-2.5 z-10"
-                  style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
+                  style={{ boxShadow: '0 8px 28px rgba(0,0,0,0.12)' }}
                 >
-                  <span className="text-xl">{current.emoji}</span>
                   <div>
                     <p className="text-slate-900 font-bold text-sm leading-tight">{current.nameHe}</p>
-                    <p className="text-xs font-bold mt-0.5 transition-colors duration-500"
-                      style={{ fontFamily: 'var(--font-mono)', color: current.color }}>
+                    <p className="text-xs font-bold mt-0.5" style={{ fontFamily: 'var(--font-mono)', color: current.color }}>
                       ₪{current.price.toLocaleString()}
                     </p>
                   </div>
-                  <Link
-                    to={`/product/${current.id}`}
-                    className="text-xs font-semibold underline underline-offset-2 transition-colors mr-1"
-                    style={{ color: current.color }}
-                  >
+                  <Link to={`/product/${current.id}`} className="text-xs font-semibold underline underline-offset-2 mr-1 transition-colors" style={{ color: current.color }}>
                     פרטים
                   </Link>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Tag badge — bottom left */}
+              {/* Bottom badge */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`tag-${current.id}`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
-                  transition={{ duration: 0.35 }}
+                  transition={{ duration: 0.32 }}
                   className="absolute bottom-3 left-3 lg:-bottom-5 lg:-left-5 rounded-2xl px-4 py-2.5 text-white z-10"
-                  style={{
-                    background: current.color,
-                    boxShadow: `0 8px 24px -4px ${current.color}99`,
-                    transition: 'background 0.5s ease, box-shadow 0.5s ease',
-                  }}
+                  style={{ background: current.color, boxShadow: `0 8px 24px -4px ${current.color}99`, transition: 'background 0.5s ease' }}
                 >
-                  <p className="text-xs opacity-80 font-medium">קטגוריה נבחרת</p>
+                  <p className="text-xs opacity-75 font-medium">קטגוריה נבחרת</p>
                   <p className="font-bold text-sm">{current.tag}</p>
                 </motion.div>
               </AnimatePresence>
-            </motion.div>
+            </div>
 
-            {/* Thumbnail strip */}
+            {/* Thumbnails */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.55, delay: 0.5 }}
               className="flex justify-center gap-2 mt-12"
             >
               {featured.map((p, i) => (
@@ -438,27 +364,79 @@ export default function Hero({ onShopNow }) {
               ))}
             </motion.div>
 
-            {/* Subtle link below thumbnails */}
             <motion.button
               onClick={onShopNow}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              whileHover={{ scale: 1.02 }}
-              className="block w-full text-center text-xs text-slate-400 hover:text-violet-500 font-medium mt-3 transition-colors duration-150"
+              transition={{ duration: 0.5, delay: 0.65 }}
+              className="block w-full text-center text-xs text-slate-400 hover:text-violet-500 font-medium mt-3 transition-colors"
             >
               צפה בכל המוצרים
             </motion.button>
           </motion.div>
-
         </div>
       </div>
 
+      {/* ── MARQUEE STRIP — full width, all screens ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.8 }}
+        className="relative w-full overflow-hidden py-5 mt-2"
+        style={{ borderTop: '1px solid rgba(124,58,237,0.08)' }}
+      >
+        {/* fade edges */}
+        <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, white, transparent)' }} />
+        <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, white, transparent)' }} />
+
+        {/* track — force LTR so translateX direction is consistent regardless of page RTL */}
+        <div
+          style={{
+            display: 'flex',
+            direction: 'ltr',
+            animation: 'marquee 30s linear infinite',
+            width: 'max-content',
+          }}
+        >
+          {/* 4 copies ensures seamless loop on any viewport */}
+          {[...marqueeProducts, ...marqueeProducts, ...marqueeProducts, ...marqueeProducts].map((p, i) => (
+            <Link
+              key={i}
+              to={`/product/${p.id}`}
+              className="flex-shrink-0 relative rounded-2xl overflow-hidden"
+              style={{
+                width: 140, height: 96,
+                margin: '0 6px',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.18)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.1)' }}
+            >
+              <img src={p.image} alt={p.nameHe} className="w-full h-full object-cover" />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 60%)' }} />
+              <p
+                className="absolute bottom-2 right-2 left-2 text-white font-bold leading-tight"
+                style={{ fontSize: 10, textShadow: '0 1px 3px rgba(0,0,0,0.7)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
+              >
+                {p.nameHe}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </motion.div>
+
       <style>{`
-        @keyframes marquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
+        @keyframes marquee   { from { transform: translateX(0) } to { transform: translateX(-25%) } }
+        @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
+        @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+        @keyframes floatC    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+        @keyframes floatCard { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
+        @keyframes pulseRing { 0%,100% { transform: scale(1); opacity: 0.3 } 50% { transform: scale(1.18); opacity: 0 } }
+        @keyframes shine     { 0%,100% { transform: translateX(-120%) } 40%,60% { transform: translateX(220%) } }
+        @keyframes arrowPulse { 0%,100% { transform: translateX(0) } 50% { transform: translateX(-5px) } }
+        @keyframes orbA      { 0%,100% { transform: scale(1); opacity: 0.08 } 50% { transform: scale(1.08); opacity: 0.13 } }
+        @keyframes orbB      { 0%,100% { transform: scale(1); opacity: 0.07 } 50% { transform: scale(1.1); opacity: 0.11 } }
       `}</style>
     </section>
   )
