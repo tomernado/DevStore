@@ -54,25 +54,6 @@ function fadeUp(i) {
   }
 }
 
-// Marquee — 16 verified tech/desk images; 4 copies used → translateX(0→-50%) seamless
-const marqueeImages = [
-  featured[0].image, // keychron keyboard
-  featured[1].image, // herman miller chair
-  featured[2].image, // LG monitor
-  featured[3].image, // jabra headphones
-  featured[4].image, // MX Master mouse
-  featured[5].image, // elgato key light
-  'https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?auto=format&fit=crop&w=400&q=80', // laptop desk setup
-  'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=400&q=80', // white keyboard
-  'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=400&q=80', // headphones flat
-  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80', // circuit board
-  'https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=400&q=80', // laptop open
-  'https://images.unsplash.com/photo-1593642532744-d377ab507dc8?auto=format&fit=crop&w=400&q=80', // laptop side
-  'https://images.unsplash.com/photo-1612838320302-4b3b3996e422?auto=format&fit=crop&w=400&q=80', // monitor glow
-  'https://images.unsplash.com/photo-1545127398-14699f92334b?auto=format&fit=crop&w=400&q=80', // mechanical keyboard closeup
-  'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=400&q=80', // tech flatlay
-  'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=400&q=80', // sony headphones
-]
 
 export default function Hero({ onShopNow }) {
   const [index, setIndex] = useState(0)
@@ -376,49 +357,9 @@ export default function Hero({ onShopNow }) {
         </div>
       </div>
 
-      {/* ── MARQUEE STRIP — full width, all screens ── */}
-      <div
-        className="relative w-full overflow-hidden py-3 mt-1"
-        style={{
-          borderTop: '1px solid rgba(124,58,237,0.08)',
-          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
-          animation: 'fadeIn 0.4s ease 0.3s both',
-        }}
-      >
-
-        {/* 4 copies: translateX(0→-50%) moves exactly 2 sets → seamless loop, starts from position 0 */}
-        <div
-          style={{
-            display: 'flex',
-            direction: 'ltr',
-            animation: 'marquee 35s linear infinite',
-            width: 'max-content',
-            willChange: 'transform',
-          }}
-        >
-          {[...marqueeImages, ...marqueeImages, ...marqueeImages, ...marqueeImages].map((src, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 rounded-xl overflow-hidden"
-              style={{
-                width: 150, height: 100,
-                margin: '0 6px',
-                background: '#e2e8f0',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.12)',
-                flexShrink: 0,
-              }}
-            >
-              <img src={src} alt="" className="w-full h-full object-cover" loading="eager" decoding="async" />
-            </div>
-          ))}
-        </div>
-      </div>
 
       <style>{`
-        @keyframes marquee   { from { transform: translateX(-50%) } to { transform: translateX(0) } }
-        @keyframes fadeIn    { from { opacity: 0 } to { opacity: 1 } }
-        @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
+@keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
         @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
         @keyframes floatC    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
         @keyframes floatCard { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
