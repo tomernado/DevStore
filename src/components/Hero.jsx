@@ -54,8 +54,34 @@ function fadeUp(i) {
   }
 }
 
-// Marquee uses the same featured list (IDs are real product IDs)
-const marqueeProducts = featured
+// Marquee — extended list so one full set exceeds the widest desktop viewport
+const marqueeProducts = [
+  ...featured,
+  {
+    id: 'm1', nameHe: 'מסך עמד מתכוונן',
+    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'm2', nameHe: 'מקלדת קומפקטית',
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'm3', nameHe: 'רמקול בלוטות׳',
+    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'm4', nameHe: 'מטען אלחוטי',
+    image: 'https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'm5', nameHe: 'מצלמת רשת 4K',
+    image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'm6', nameHe: 'שולחן עמידה',
+    image: 'https://images.unsplash.com/photo-1593642532744-d377ab507dc8?auto=format&fit=crop&w=600&q=80',
+  },
+]
 
 export default function Hero({ onShopNow }) {
   const [index, setIndex] = useState(0)
@@ -365,11 +391,12 @@ export default function Hero({ onShopNow }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8 }}
         className="relative w-full overflow-hidden py-3 mt-1"
-        style={{ borderTop: '1px solid rgba(124,58,237,0.08)' }}
+        style={{
+          borderTop: '1px solid rgba(124,58,237,0.08)',
+          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+        }}
       >
-        {/* fade edges */}
-        <div className="absolute inset-y-0 left-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, white, transparent)' }} />
-        <div className="absolute inset-y-0 right-0 w-16 z-10 pointer-events-none" style={{ background: 'linear-gradient(to left, white, transparent)' }} />
 
         {/* track — force LTR; 2 copies + translateX(0→-50%) = seamless infinite loop */}
         <div
