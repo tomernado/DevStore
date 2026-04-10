@@ -46,10 +46,10 @@ const slideV = {
 
 function staggerV(i) {
   return {
-    hidden: { opacity: 0, y: 28, clipPath: 'inset(0 0 100% 0)' },
+    hidden: { opacity: 0, y: 24 },
     visible: {
-      opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)',
-      transition: { duration: 0.65, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
+      opacity: 1, y: 0,
+      transition: { duration: 0.6, delay: 0.1 + i * 0.1, ease: [0.22, 1, 0.36, 1] },
     },
   }
 }
@@ -195,37 +195,29 @@ export default function Hero({ onShopNow }) {
               ))}
             </motion.div>
 
-            {/* Mobile image strip */}
+            {/* Mobile image strip — CSS marquee (truly infinite) */}
             <motion.div
               variants={staggerV(3)} initial="hidden" animate="visible"
               className="lg:hidden overflow-hidden mb-8 -mx-4"
             >
-              <motion.div
-                animate={{ x: ['0%', '-50%'] }}
-                transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
-                className="flex gap-3 px-4"
-                style={{ width: 'max-content' }}
-              >
-                {[...featured, ...featured].map((p, i) => (
-                  <div
+              <div className="flex" style={{ animation: 'marquee 28s linear infinite' }}>
+                {/* 4 copies so the seam is invisible on any screen width */}
+                {[...featured, ...featured, ...featured, ...featured].map((p, i) => (
+                  <Link
                     key={i}
-                    className="flex-shrink-0 relative rounded-2xl overflow-hidden"
-                    style={{
-                      width: 120, height: 84,
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                    }}
+                    to={`/product/${p.id}`}
+                    className="flex-shrink-0 relative rounded-2xl overflow-hidden mx-1.5"
+                    style={{ width: 118, height: 84, boxShadow: '0 4px 16px rgba(0,0,0,0.12)' }}
                   >
                     <img src={p.image} alt={p.nameHe} className="w-full h-full object-cover" />
-                    <div
-                      className="absolute inset-0"
-                      style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 55%)' }}
-                    />
-                    <p className="absolute bottom-1.5 right-2 text-white text-[9px] font-bold leading-tight" style={{ maxWidth: 100, textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)' }} />
+                    <p className="absolute bottom-1.5 right-2 left-2 text-white font-bold leading-tight"
+                      style={{ fontSize: 9, textShadow: '0 1px 3px rgba(0,0,0,0.6)', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {p.nameHe}
                     </p>
-                  </div>
+                  </Link>
                 ))}
-              </motion.div>
+              </div>
             </motion.div>
 
             {/* CTA */}
@@ -462,10 +454,10 @@ export default function Hero({ onShopNow }) {
         </div>
       </div>
 
-      {/* ping keyframe for the live dot */}
       <style>{`
-        @keyframes ping {
-          75%, 100% { transform: scale(2); opacity: 0; }
+        @keyframes marquee {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
       `}</style>
     </section>
