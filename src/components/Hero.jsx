@@ -133,7 +133,6 @@ export default function Hero({ onShopNow }) {
                 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2.2rem, 7vw, 4.3rem)' }}
               >
                 <span className="block">ציוד פרימיום</span>
-                <span className="block">לסביבת עבודה</span>
                 <span className="relative block" style={{ color: '#7c3aed' }}>
                   שמעוררת השראה
                   {/* Animated wavy underline */}
