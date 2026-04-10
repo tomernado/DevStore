@@ -22,16 +22,20 @@ export default function ProductGrid({ activeCategory, onCategoryChange }) {
           name: p.name,
           nameHe: p.name_he || p.name,
           price: p.price,
+          salePrice: p.sale_price ?? null,
           category: p.category,
           image: p.image,
           description: p.description,
           badge: p.badge,
+          colorVariants: Array.isArray(p.color_variants) ? p.color_variants : [],
+          specs: Array.isArray(p.specs) ? p.specs : [],
         })))
       })
   }, [])
 
   const filtered = allProducts.filter((p) => {
-    const matchCat = !activeCategory || p.category === activeCategory
+    const matchCat = !activeCategory
+      || (activeCategory === 'sale' ? p.salePrice != null : p.category === activeCategory)
     const q = query.trim().toLowerCase()
     const matchQuery = !q ||
       p.nameHe?.toLowerCase().includes(q) ||

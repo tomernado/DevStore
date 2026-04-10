@@ -43,11 +43,15 @@ export default function ProductCard({ product, index }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent pointer-events-none" />
 
             {/* Badge */}
-            {product.badge && (
+            {product.salePrice ? (
+              <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-rose-500 text-white text-xs font-bold shadow-sm">
+                -{Math.round((1 - product.salePrice / product.price) * 100)}%
+              </div>
+            ) : product.badge ? (
               <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-violet-600 text-white text-xs font-bold shadow-sm">
                 {product.badge}
               </div>
-            )}
+            ) : null}
 
             {/* Favorite */}
             <motion.button
@@ -95,12 +99,22 @@ export default function ProductCard({ product, index }) {
             </p>
 
             <div className="flex items-center justify-between mt-2 sm:mt-0">
-              <span
-                className="text-base sm:text-xl font-bold text-slate-900"
-                style={{ fontFamily: 'var(--font-mono)' }}
-              >
-                ₪{product.price.toLocaleString()}
-              </span>
+              <div className="flex flex-col leading-tight">
+                {product.salePrice ? (
+                  <>
+                    <span className="text-[11px] text-slate-400 line-through leading-none" style={{ fontFamily: 'var(--font-mono)' }}>
+                      ₪{product.price.toLocaleString()}
+                    </span>
+                    <span className="text-base sm:text-xl font-bold text-rose-600" style={{ fontFamily: 'var(--font-mono)' }}>
+                      ₪{product.salePrice.toLocaleString()}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-base sm:text-xl font-bold text-slate-900" style={{ fontFamily: 'var(--font-mono)' }}>
+                    ₪{product.price.toLocaleString()}
+                  </span>
+                )}
+              </div>
               <motion.button
                 onClick={handleAddToCart}
                 whileHover={{ scale: 1.05 }}
