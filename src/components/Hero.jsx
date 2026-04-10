@@ -62,7 +62,7 @@ const marqueeImages = [
   featured[3].image, // jabra headphones
   featured[4].image, // MX Master mouse
   featured[5].image, // elgato key light
-  'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?auto=format&fit=crop&w=400&q=80', // laptop desk setup
+  'https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?auto=format&fit=crop&w=400&q=80', // laptop desk setup
   'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=400&q=80', // white keyboard
   'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=400&q=80', // headphones flat
   'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80', // circuit board
@@ -392,8 +392,9 @@ export default function Hero({ onShopNow }) {
           style={{
             display: 'flex',
             direction: 'ltr',
-            animation: 'marquee 40s linear infinite',
+            animation: 'marquee 35s linear infinite',
             width: 'max-content',
+            willChange: 'transform',
           }}
         >
           {[...marqueeImages, ...marqueeImages, ...marqueeImages, ...marqueeImages].map((src, i) => (
@@ -415,7 +416,7 @@ export default function Hero({ onShopNow }) {
       </div>
 
       <style>{`
-        @keyframes marquee   { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+        @keyframes marquee   { from { transform: translateX(-50%) } to { transform: translateX(0) } }
         @keyframes fadeIn    { from { opacity: 0 } to { opacity: 1 } }
         @keyframes floatA    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-5px) } }
         @keyframes floatB    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
