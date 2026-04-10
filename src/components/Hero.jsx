@@ -125,7 +125,7 @@ export default function Hero({ onShopNow }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center">
 
           {/* ── TEXT COLUMN ─────────────────────────── */}
-          <div>
+          <div className="text-center lg:text-right">
             {/* Headline */}
             <motion.div variants={staggerV(1)} initial="hidden" animate="visible" className="mb-6">
               <h1
@@ -161,7 +161,7 @@ export default function Hero({ onShopNow }) {
             {/* Subtext */}
             <motion.p
               variants={staggerV(2)} initial="hidden" animate="visible"
-              className="text-slate-500 leading-relaxed mb-9 max-w-md"
+              className="text-slate-500 leading-relaxed mb-9 max-w-md mx-auto lg:mx-0"
               style={{ fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)' }}
             >
               כי הכלים שאתה עובד איתם{' '}
@@ -172,7 +172,7 @@ export default function Hero({ onShopNow }) {
             {/* Trust chips */}
             <motion.div
               variants={staggerV(3)} initial="hidden" animate="visible"
-              className="flex flex-wrap gap-2.5 mb-10"
+              className="flex flex-wrap justify-center lg:justify-start gap-2.5 mb-10"
             >
               {[
                 { label: 'אחריות יבואן רשמי' },
@@ -200,7 +200,7 @@ export default function Hero({ onShopNow }) {
             {/* CTA */}
             <motion.div
               variants={staggerV(4)} initial="hidden" animate="visible"
-              className="flex justify-center sm:justify-start mb-14"
+              className="flex justify-center lg:justify-start mb-14"
             >
               <motion.button
                 onClick={onShopNow}
@@ -235,7 +235,7 @@ export default function Hero({ onShopNow }) {
             {/* Stats */}
             <motion.div
               variants={staggerV(5)} initial="hidden" animate="visible"
-              className="hidden sm:grid grid-cols-3 gap-6 pt-8 border-t border-slate-100"
+              className="hidden sm:grid grid-cols-3 gap-6 pt-8 border-t border-slate-100 text-center lg:text-right"
             >
               {[
                 { value: '200+', label: 'מוצרים נבחרים' },
