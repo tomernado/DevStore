@@ -163,6 +163,9 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
   const [imageMode, setImageMode] = useState('url')
   const [uploading, setUploading] = useState(false)
   const [tab, setTab] = useState('basic') // 'basic' | 'colors' | 'specs'
+  const [showPinModal, setShowPinModal] = useState(false)
+  const [pin, setPin] = useState('')
+  const [pinError, setPinError] = useState(false)
   const fileRef = useRef(null)
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -224,7 +227,7 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 16 }}
         transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+        className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-7 pt-6 pb-4 border-b border-slate-100 flex-shrink-0">
@@ -397,22 +400,84 @@ function ProductModal({ initial, isEdit, onSave, onClose }) {
             {loading ? 'שומר...' : status === 'success' ? '✓ נשמר' : isEdit ? 'שמור שינויים' : 'הוסף מוצר'}
           </motion.button>
           {isEdit && (
-            <button
-              type="button"
-              disabled={loading}
-              onClick={async () => {
-                if (!confirm('למחוק את המוצר לצמיתות?')) return
-                setLoading(true)
-                const { error } = await supabase.from('products').delete().eq('id', form.id)
-                setLoading(false)
-                if (error) { console.error(error); return }
-                onSave(); onClose()
-              }}
-              className="w-full py-2.5 rounded-2xl text-red-500 hover:bg-red-50 border border-red-100 hover:border-red-300 font-semibold text-sm transition-all flex items-center justify-center gap-2"
-            >
-              <Trash2 size={14} />
-              מחק מוצר
-            </button>
+            <>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => { setPin(''); setPinError(false); setShowPinModal(true) }}
+                className="w-full py-2.5 rounded-2xl text-red-500 hover:bg-red-50 border border-red-100 hover:border-red-300 font-semibold text-sm transition-all flex items-center justify-center gap-2"
+              >
+                <Trash2 size={14} />
+                מחק מוצר
+              </button>
+
+              <AnimatePresence>
+                {showPinModal && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-white/90 backdrop-blur-sm"
+                  >
+                    <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 w-72 text-center space-y-4">
+                      <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center mx-auto">
+                        <Trash2 size={18} className="text-red-500" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-800 text-sm">אישור מחיקה</p>
+                        <p className="text-slate-400 text-xs mt-1">הזן קוד אישור למחיקת המוצר</p>
+                      </div>
+                      <input
+                        autoFocus
+                        type="password"
+                        inputMode="numeric"
+                        maxLength={4}
+                        value={pin}
+                        onChange={e => { setPin(e.target.value.replace(/\D/g, '')); setPinError(false) }}
+                        onKeyDown={async e => {
+                          if (e.key !== 'Enter') return
+                          if (pin !== '0000') { setPinError(true); setPin(''); return }
+                          setShowPinModal(false)
+                          setLoading(true)
+                          const { error } = await supabase.from('products').delete().eq('id', form.id)
+                          setLoading(false)
+                          if (error) { console.error(error); setStatus('error'); return }
+                          onSave(); onClose()
+                        }}
+                        placeholder="• • • •"
+                        className={`w-full text-center tracking-[0.5em] px-4 py-3 rounded-xl border text-slate-900 text-lg font-bold focus:outline-none focus:ring-2 transition-all ${pinError ? 'border-red-400 ring-red-100 bg-red-50' : 'border-slate-200 bg-slate-50 focus:border-violet-400 focus:ring-violet-100'}`}
+                      />
+                      {pinError && <p className="text-red-500 text-xs">קוד שגוי, נסה שנית</p>}
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setShowPinModal(false)}
+                          className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors"
+                        >
+                          ביטול
+                        </button>
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            if (pin !== '0000') { setPinError(true); setPin(''); return }
+                            setShowPinModal(false)
+                            setLoading(true)
+                            const { error } = await supabase.from('products').delete().eq('id', form.id)
+                            setLoading(false)
+                            if (error) { console.error(error); setStatus('error'); return }
+                            onSave(); onClose()
+                          }}
+                          className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-bold transition-colors"
+                        >
+                          מחק
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
           )}
         </div>
       </motion.div>

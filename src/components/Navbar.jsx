@@ -455,7 +455,7 @@ function NavPill({ children, active, onClick }) {
       onClick={onClick}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.96 }}
-      className={`relative flex items-center px-4 py-2 rounded-xl text-[15px] font-bold tracking-tight transition-all duration-150 ${
+      className={`relative flex items-center px-3 py-1.5 rounded-xl text-[13px] font-bold tracking-tight transition-all duration-150 ${
         active
           ? 'text-violet-700 bg-violet-50'
           : 'text-slate-400 hover:text-slate-900 hover:bg-slate-100'
